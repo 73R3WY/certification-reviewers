@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS Certified AI Practitioner (AIF-C01) Practice Exam</title>
+<style>
+  :root {
+    --navy: #232f3e;
+    --navy-2: #16202c;
+    --orange: #ff9900;
+    --orange-dark: #e88b00;
+    --green: #1d8102;
+    --red: #d13212;
+    --bg: #f2f3f3;
+    --card: #ffffff;
+    --border: #d5dbdb;
+    --text: #16191f;
+    --muted: #5f6b7a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  header {
+    background: var(--navy);
+    color: #fff;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  header h1 {
+    font-size: 18px;
+    margin: 0;
+    font-weight: 600;
+  }
+  header .badge {
+    background: var(--orange);
+    color: var(--navy-2);
+    font-weight: 700;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 12px;
+  }
+  #app {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  #start-screen h2 { margin-top: 0; }
+  #start-screen ul { line-height: 1.8; color: var(--muted); }
+  .btn {
+    display: inline-block;
+    background: var(--orange);
+    color: var(--navy-2);
+    border: none;
+    padding: 12px 22px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .btn:hover { background: var(--orange-dark); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn.secondary {
+    background: #fff;
+    color: var(--navy);
+    border: 1px solid var(--border);
+  }
+  .btn.secondary:hover { background: #f2f3f3; }
+  #quiz-screen { display: none; }
+  #result-screen { display: none; }
+  .progress-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .progress-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--orange);
+    transition: width 0.2s ease;
+  }
+  #palette {
+    display: grid;
+    grid-template-columns: repeat(13, 1fr);
+    gap: 5px;
+    margin-bottom: 20px;
+  }
+  #palette button {
+    aspect-ratio: 1;
+    border: 1px solid var(--border);
+    background: #fff;
+    border-radius: 4px;
+    font-size: 10px;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 0;
+  }
+  #palette button.answered { background: #e8f4d9; border-color: #b7d89a; color: #2c5200; }
+  #palette button.current { border: 2px solid var(--orange); font-weight: 700; color: var(--navy); }
+  .domain-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--orange-dark);
+    background: #fff4e0;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+  #question-text {
+    font-size: 17px;
+    line-height: 1.5;
+    margin: 0 0 20px;
+  }
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .option:hover { border-color: var(--orange); background: #fffaf2; }
+  .option.selected { border-color: var(--orange); background: #fff4e0; }
+  .option input { margin-top: 3px; flex-shrink: 0; }
+  .option span { line-height: 1.4; }
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+  }
+  .nav-row .right { display: flex; gap: 10px; }
+  #result-screen .score-big {
+    font-size: 48px;
+    font-weight: 800;
+    margin: 6px 0;
+  }
+  #result-screen .pass { color: var(--green); }
+  #result-screen .fail { color: var(--red); }
+  #result-screen .summary {
+    display: flex;
+    gap: 24px;
+    margin: 18px 0 28px;
+    flex-wrap: wrap;
+  }
+  #result-screen .stat {
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 12px 18px;
+    min-width: 120px;
+  }
+  #result-screen .stat .num { font-size: 22px; font-weight: 700; }
+  #result-screen .stat .label { font-size: 12px; color: var(--muted); text-transform: uppercase; }
+  .review-item {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .review-item.correct { border-left: 4px solid var(--green); }
+  .review-item.incorrect { border-left: 4px solid var(--red); }
+  .review-item .rq { font-weight: 600; margin-bottom: 8px; }
+  .review-item .ra { font-size: 14px; margin: 4px 0; }
+  .review-item .ra.your-wrong { color: var(--red); }
+  .review-item .ra.correct-answer { color: var(--green); }
+  .review-item .exp { font-size: 13px; color: var(--muted); margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); }
+  #review-filter { margin-bottom: 16px; display: flex; gap: 8px; }
+  #review-list { display: none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>AWS Certified AI Practitioner &mdash; Practice Exam</h1>
+  <span class="badge">AIF-C01</span>
+</header>
+
+<div id="app">
+
+  <div id="start-screen" class="card">
+    <h2>130-Question Practice Exam</h2>
+    <p>This simulates the AWS Certified AI Practitioner (AIF-C01) exam across all five official domains:</p>
+    <ul>
+      <li>Domain 1: Fundamentals of AI and ML</li>
+      <li>Domain 2: Fundamentals of Generative AI</li>
+      <li>Domain 3: Applications of Foundation Models</li>
+      <li>Domain 4: Guidelines for Responsible AI</li>
+      <li>Domain 5: Security, Compliance, and Governance for AI Solutions</li>
+    </ul>
+    <p style="color: var(--muted); font-size: 14px;">Questions and answer choices are shuffled each time you start. Navigate freely between questions with Next/Previous or the number grid. Your score, pass/fail status, and a full answer review are shown at the end.</p>
+    <button class="btn" onclick="startQuiz()">Start Exam</button>
+  </div>
+
+  <div id="quiz-screen">
+    <div class="card">
+      <div class="progress-row">
+        <span id="progress-label">Question 1 of 130</span>
+        <span id="answered-label">0 answered</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <div id="palette"></div>
+      <div class="domain-tag" id="domain-tag"></div>
+      <p id="question-text"></p>
+      <div id="options"></div>
+      <div class="nav-row">
+        <button class="btn secondary" id="prev-btn" onclick="prevQuestion()">Previous</button>
+        <div class="right">
+          <button class="btn secondary" id="finish-btn" onclick="confirmFinish()" style="display:none">Finish Exam</button>
+          <button class="btn" id="next-btn" onclick="nextQuestion()">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="result-screen">
+    <div class="card">
+      <h2>Exam Results</h2>
+      <div class="score-big" id="score-big"></div>
+      <div id="pass-label" style="font-size:18px; font-weight:700;"></div>
+      <div class="summary">
+        <div class="stat"><div class="num" id="stat-correct"></div><div class="label">Correct</div></div>
+        <div class="stat"><div class="num" id="stat-incorrect"></div><div class="label">Incorrect</div></div>
+        <div class="stat"><div class="num" id="stat-unanswered"></div><div class="label">Unanswered</div></div>
+        <div class="stat"><div class="num" id="stat-pct"></div><div class="label">Score</div></div>
+      </div>
+      <div style="display:flex; gap:10px; margin-bottom: 10px;">
+        <button class="btn secondary" onclick="toggleReview()" id="review-toggle-btn">Show Answer Review</button>
+        <button class="btn secondary" onclick="location.reload()">Retake Exam</button>
+      </div>
+      <div id="review-list"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const QUESTIONS = [
+  // ---------------- DOMAIN 1: Fundamentals of AI and ML ----------------
+  {d:"Domain 1: Fundamentals of AI and ML", q:"What is Artificial Intelligence (AI)?", opts:["A broad field of computer science focused on building systems that can perform tasks requiring human-like intelligence","A specific algorithm for sorting numerical data","A hardware accelerator used only for graphics rendering","A database query language"], correct:"A broad field of computer science focused on building systems that can perform tasks requiring human-like intelligence", exp:"AI is the overarching field; ML and deep learning are subsets of it."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"Machine Learning (ML) is best described as:", opts:["A subset of AI where systems learn patterns from data rather than following explicit rules","A method for manually programming every possible business rule","A type of relational database","A programming language for web development"], correct:"A subset of AI where systems learn patterns from data rather than following explicit rules", exp:"ML models learn statistical patterns from data instead of relying on hard-coded logic."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"Deep Learning is best described as:", opts:["A subset of ML that uses multi-layered neural networks to learn representations from data","A rule-based expert system","A type of unsupervised clustering only","A data warehousing technique"], correct:"A subset of ML that uses multi-layered neural networks to learn representations from data", exp:"Deep learning uses neural networks with many layers to model complex patterns."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"Supervised learning requires:", opts:["Labeled training data with known input-output pairs","No data at all","Only unlabeled data","A reward signal from an environment"], correct:"Labeled training data with known input-output pairs", exp:"Supervised learning maps inputs to known, labeled outputs (e.g., classification, regression)."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"Unsupervised learning is used to:", opts:["Find hidden patterns or groupings in unlabeled data","Predict a labeled outcome using labeled training examples","Maximize a cumulative reward through trial and error","Compress images losslessly"], correct:"Find hidden patterns or groupings in unlabeled data", exp:"Clustering and dimensionality reduction are common unsupervised learning tasks."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"Reinforcement learning works by:", opts:["An agent learning to take actions in an environment to maximize cumulative reward","Training only on labeled data with a fixed loss function","Grouping similar data points without any feedback","Copying outputs from a larger pretrained model"], correct:"An agent learning to take actions in an environment to maximize cumulative reward", exp:"Reinforcement learning uses trial-and-error with reward signals, not labeled datasets."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"In machine learning, \"training\" refers to:", opts:["The process of learning patterns from data to produce a model", "The process of using a finished model to generate predictions","Encrypting data before storage","Deploying a model to a production endpoint"], correct:"The process of learning patterns from data to produce a model", exp:"Training is the learning phase; inference is using the trained model afterward."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"In machine learning, \"inference\" refers to:", opts:["Using a trained model to generate predictions on new data","The initial data labeling process","Adjusting a model's hyperparameters","Cleaning and normalizing a dataset"], correct:"Using a trained model to generate predictions on new data", exp:"Inference happens after training, when the model is applied to new inputs."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"Overfitting occurs when a model:", opts:["Performs well on training data but poorly on new, unseen data","Performs poorly on both training and test data","Has too few parameters to capture any pattern","Is trained using only unlabeled data"], correct:"Performs well on training data but poorly on new, unseen data", exp:"Overfitting means the model memorized training data noise instead of generalizing."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"Underfitting occurs when a model:", opts:["Is too simple to capture the underlying patterns in the data","Perfectly memorizes the training set","Has an excessively large context window","Uses too many training epochs"], correct:"Is too simple to capture the underlying patterns in the data", exp:"Underfit models have high bias and perform poorly even on training data."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"A hyperparameter is:", opts:["A configuration value set before training, such as learning rate, not learned from data","A value the model learns automatically during training, such as a weight","A type of labeled dataset","A metric used only for classification tasks"], correct:"A configuration value set before training, such as learning rate, not learned from data", exp:"Hyperparameters (e.g., learning rate, batch size) are set by practitioners, not learned."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"In ML, \"features\" refer to:", opts:["The input variables used by a model to make predictions","The final output label predicted by a model","The hardware used to train a model","The number of training epochs"], correct:"The input variables used by a model to make predictions", exp:"Features are the measurable input attributes fed into a model."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"Which type of ML task predicts a continuous numeric value, such as a house price?", opts:["Regression","Classification","Clustering","Reinforcement learning"], correct:"Regression", exp:"Regression predicts continuous outputs; classification predicts discrete categories."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"Which type of ML task predicts a discrete category, such as \"spam\" or \"not spam\"?", opts:["Classification","Regression","Dimensionality reduction","Reinforcement learning"], correct:"Classification", exp:"Classification assigns inputs to predefined discrete categories."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"Clustering is an example of which type of learning?", opts:["Unsupervised learning","Supervised learning","Reinforcement learning","Semi-labeled learning"], correct:"Unsupervised learning", exp:"Clustering groups data by similarity without using labeled outcomes."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"A confusion matrix is primarily used to:", opts:["Evaluate the performance of a classification model","Visualize a model's training loss curve","Store model weights during training","Encrypt training data"], correct:"Evaluate the performance of a classification model", exp:"A confusion matrix breaks down true/false positives and negatives."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"Precision in a classification model measures:", opts:["The proportion of predicted positives that are actually positive","The proportion of actual positives that were correctly predicted","The total number of correct predictions divided by all predictions","The average error across all predictions"], correct:"The proportion of predicted positives that are actually positive", exp:"Precision = True Positives / (True Positives + False Positives)."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"Recall in a classification model measures:", opts:["The proportion of actual positives that were correctly predicted","The proportion of predicted positives that are actually positive","The overall accuracy of the model","The number of features used by the model"], correct:"The proportion of actual positives that were correctly predicted", exp:"Recall = True Positives / (True Positives + False Negatives)."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"The F1 score is best described as:", opts:["The harmonic mean of precision and recall","The sum of precision and recall","A measure of training time","The number of correctly labeled training examples"], correct:"The harmonic mean of precision and recall", exp:"F1 balances precision and recall into a single metric, useful for imbalanced data."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"AUC-ROC is used to measure:", opts:["A model's ability to distinguish between classes across different thresholds","The amount of compute used during training","The number of layers in a neural network","The size of the training dataset"], correct:"A model's ability to distinguish between classes across different thresholds", exp:"AUC-ROC plots true positive rate vs. false positive rate across thresholds."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"Which AWS service provides a fully managed environment to build, train, and deploy machine learning models?", opts:["Amazon SageMaker","Amazon RDS","AWS Lambda","Amazon CloudFront"], correct:"Amazon SageMaker", exp:"SageMaker covers the full ML lifecycle: data prep, training, tuning, and deployment."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"An \"epoch\" during model training refers to:", opts:["One complete pass through the entire training dataset","A single prediction made by the model","The final evaluation step after deployment","A unit of GPU memory"], correct:"One complete pass through the entire training dataset", exp:"Training typically runs for multiple epochs to iteratively improve the model."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"In a neural network, \"weights\" are:", opts:["Parameters adjusted during training to minimize prediction error","Fixed hyperparameters set before training","The raw input features","The final output labels"], correct:"Parameters adjusted during training to minimize prediction error", exp:"Weights are learned automatically via optimization (e.g., gradient descent)."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"Which of the following is a typical computer vision task?", opts:["Object detection in images","Machine translation between languages","Speech-to-text transcription","Sentiment analysis of product reviews"], correct:"Object detection in images", exp:"Computer vision focuses on interpreting visual data such as images and video."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"Natural Language Processing (NLP) primarily deals with:", opts:["Understanding and generating human language","Rendering 3D graphics","Optimizing database indexes","Managing network traffic routing"], correct:"Understanding and generating human language", exp:"NLP covers tasks like translation, summarization, and sentiment analysis."},
+  {d:"Domain 1: Fundamentals of AI and ML", q:"Which best describes the bias-variance tradeoff in ML?", opts:["Balancing a model's simplicity (bias) against its sensitivity to training data (variance) to minimize total error","Balancing GPU cost against CPU cost during training","Balancing the number of labels against the number of features","Balancing encryption strength against inference speed"], correct:"Balancing a model's simplicity (bias) against its sensitivity to training data (variance) to minimize total error", exp:"High bias underfits; high variance overfits. Good models balance both."},
+
+  // ---------------- DOMAIN 2: Fundamentals of Generative AI ----------------
+  {d:"Domain 2: Fundamentals of Generative AI", q:"A foundation model (FM) is best described as:", opts:["A large model pretrained on broad data that can be adapted to many downstream tasks","A model trained from scratch for a single narrow use case only","A rule-based system with no learned parameters","A database schema used to store training data"], correct:"A large model pretrained on broad data that can be adapted to many downstream tasks", exp:"Foundation models are pretrained at scale and then adapted via prompting or fine-tuning."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"What does LLM stand for?", opts:["Large Language Model","Long Latency Machine","Linear Learning Method","Limited Logic Model"], correct:"Large Language Model", exp:"LLMs are large-scale models trained on vast text corpora to understand and generate language."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"In the context of LLMs, a \"token\" represents:", opts:["A chunk of text, such as a word or sub-word, processed by the model","A unique user login credential","A single training epoch","A hardware accelerator unit"], correct:"A chunk of text, such as a word or sub-word, processed by the model", exp:"Text is broken into tokens before being fed into a language model."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"An \"embedding\" is best described as:", opts:["A numerical vector representation that captures semantic meaning of data","A compressed image file format","A type of database index","A hyperparameter used only in reinforcement learning"], correct:"A numerical vector representation that captures semantic meaning of data", exp:"Embeddings map text, images, or other data into vector space for similarity comparison."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"The Transformer architecture, used by most modern LLMs, primarily relies on:", opts:["Self-attention mechanisms","Convolutional filters only","Manually engineered decision trees","Simple linear regression"], correct:"Self-attention mechanisms", exp:"Self-attention lets the model weigh the relevance of different tokens to each other."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"Diffusion models are most commonly used for:", opts:["Image generation","Tabular data classification","Time-series forecasting","Network intrusion detection"], correct:"Image generation", exp:"Diffusion models iteratively denoise random data to generate realistic images."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"What does GAN stand for?", opts:["Generative Adversarial Network","General Analytics Network","Gradient Aggregation Node","Guided Attention Neuron"], correct:"Generative Adversarial Network", exp:"GANs are a class of generative models used for tasks like image synthesis."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"A GAN architecture consists of:", opts:["A generator and a discriminator competing against each other","Only an encoder network","Only a decoder network","A single classifier with no adversarial component"], correct:"A generator and a discriminator competing against each other", exp:"The generator creates fake samples while the discriminator tries to detect them."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"The \"context window\" of a language model refers to:", opts:["The amount of text (in tokens) the model can consider at once","The physical memory of the GPU used for training","The number of layers in the neural network","The number of labeled examples used in fine-tuning"], correct:"The amount of text (in tokens) the model can consider at once", exp:"A larger context window lets the model process longer documents or conversations."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"\"Hallucination\" in generative AI refers to:", opts:["The model generating plausible-sounding but factually incorrect or fabricated content","The model refusing to answer any question","A hardware failure during inference","A type of data encryption error"], correct:"The model generating plausible-sounding but factually incorrect or fabricated content", exp:"Hallucinations are a key risk to mitigate, often through grounding techniques like RAG."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"A multimodal model is one that can:", opts:["Process or generate multiple types of data, such as text, images, and audio","Only process text data","Only run on multiple GPUs simultaneously","Only be used for classification tasks"], correct:"Process or generate multiple types of data, such as text, images, and audio", exp:"Multimodal models combine understanding across different data modalities."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"\"Zero-shot learning\" means the model:", opts:["Performs a task without being given any task-specific examples in the prompt","Requires thousands of labeled examples before answering","Has zero parameters","Can only operate offline"], correct:"Performs a task without being given any task-specific examples in the prompt", exp:"Zero-shot relies on the model's general pretrained knowledge alone."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"\"Few-shot learning\" means the model is given:", opts:["A small number of examples within the prompt to guide its response","No examples at all","A completely retrained set of weights","Only numerical training data"], correct:"A small number of examples within the prompt to guide its response", exp:"Few-shot prompting shows the model a handful of examples before the actual task."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"\"In-context learning\" refers to:", opts:["A model adapting its behavior based on examples in the prompt, without updating its weights","Permanently updating a model's weights after every conversation","Training a model exclusively on labeled contextual data","A method for compressing model size"], correct:"A model adapting its behavior based on examples in the prompt, without updating its weights", exp:"In-context learning happens at inference time through prompting, not retraining."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"The \"temperature\" parameter in text generation controls:", opts:["The randomness or creativity of the generated output","The physical GPU temperature during inference","The number of tokens in the context window","The size of the training dataset"], correct:"The randomness or creativity of the generated output", exp:"Lower temperature produces more deterministic output; higher temperature increases variability."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"\"Top-p\" (nucleus) sampling controls generation by:", opts:["Considering the smallest set of tokens whose cumulative probability exceeds p","Always selecting the single highest-probability token","Randomly selecting from all possible tokens equally","Limiting the number of training epochs"], correct:"Considering the smallest set of tokens whose cumulative probability exceeds p", exp:"Top-p dynamically adjusts the candidate token pool based on probability mass."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"\"Top-k\" sampling controls generation by:", opts:["Limiting token selection to the k most probable next tokens","Selecting the k least probable tokens","Setting the number of attention heads to k","Determining the number of fine-tuning epochs"], correct:"Limiting token selection to the k most probable next tokens", exp:"Top-k restricts sampling to a fixed-size set of the highest-probability candidates."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"Amazon Bedrock is best described as:", opts:["A fully managed service that provides access to multiple foundation models via a single API","A relational database service","A container orchestration service","A service exclusively for training models from scratch"], correct:"A fully managed service that provides access to multiple foundation models via a single API", exp:"Bedrock offers serverless access to FMs from AWS and third-party providers."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"Which of these model providers are available through Amazon Bedrock?", opts:["Anthropic, Amazon Titan, Meta, AI21 Labs, Stability AI, Cohere","Only Amazon-built models","Only open-source community models with no vendor support","Only models that run exclusively on-premises"], correct:"Anthropic, Amazon Titan, Meta, AI21 Labs, Stability AI, Cohere", exp:"Bedrock aggregates multiple leading foundation model providers behind one API."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"\"Pretraining\" a foundation model refers to:", opts:["The initial large-scale training on broad, general-purpose data","Fine-tuning a model on a small, specific dataset","Testing a model's outputs before deployment","Encrypting a model's weights before storage"], correct:"The initial large-scale training on broad, general-purpose data", exp:"Pretraining builds broad general knowledge; fine-tuning specializes it further."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"\"Fine-tuning\" a foundation model refers to:", opts:["Further training a pretrained model on a smaller, task-specific labeled dataset","The very first training run on internet-scale data","Adjusting only the temperature parameter at inference time","Compressing a model to reduce its size"], correct:"Further training a pretrained model on a smaller, task-specific labeled dataset", exp:"Fine-tuning adapts a general foundation model to a specific domain or task."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"A vector database is primarily used to:", opts:["Store and retrieve embeddings for similarity search","Store relational tables with foreign keys","Manage user authentication credentials","Store raw video files for streaming"], correct:"Store and retrieve embeddings for similarity search", exp:"Vector databases enable fast nearest-neighbor search over embedding vectors, key for RAG."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"\"Prompt engineering\" is best described as:", opts:["Crafting inputs to guide a foundation model toward a desired output","Writing backend application code","Training a model from randomly initialized weights","Configuring network firewalls for an AI application"], correct:"Crafting inputs to guide a foundation model toward a desired output", exp:"Prompt engineering shapes model behavior without changing its underlying weights."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"A \"system prompt\" in a chat-based LLM is used to:", opts:["Set the overall behavior, tone, or persona for the assistant before user interaction begins","Store the user's final answer","Encrypt the conversation history","Define the model's hyperparameters at training time"], correct:"Set the overall behavior, tone, or persona for the assistant before user interaction begins", exp:"System prompts establish context/instructions the model should follow throughout a session."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"Which use case is best suited for generative AI?", opts:["Drafting marketing copy and summarizing long documents","Sorting a list of numbers in ascending order","Calculating exact tax withholdings via fixed formulas","Routing network packets between data centers"], correct:"Drafting marketing copy and summarizing long documents", exp:"Generative AI excels at creating new content such as text, images, or code."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"Amazon Titan is:", opts:["AWS's own family of foundation models available through Amazon Bedrock","A third-party open-source model not available on AWS","A relational database engine","A container image registry"], correct:"AWS's own family of foundation models available through Amazon Bedrock", exp:"Titan models include text generation, embeddings, and image generation variants."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"What primarily differentiates generative AI from traditional predictive machine learning?", opts:["Generative AI creates new content rather than only classifying or predicting existing labels","Generative AI cannot use neural networks","Generative AI only works with numeric tabular data","Generative AI requires no training data whatsoever"], correct:"Generative AI creates new content rather than only classifying or predicting existing labels", exp:"Predictive ML classifies or forecasts; generative AI produces novel text, images, etc."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"Model \"parameters\" generally represent:", opts:["The learned weights within a model that determine its behavior","The number of GPUs used to train the model","The number of labeled training examples","The physical size of the model's storage file only"], correct:"The learned weights within a model that determine its behavior", exp:"Parameter count (e.g., billions of parameters) roughly indicates model capacity."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"A larger context window is especially useful for:", opts:["Processing long documents or extended conversations in a single request","Reducing the number of tokens a model can accept","Eliminating the need for embeddings","Guaranteeing zero hallucinations"], correct:"Processing long documents or extended conversations in a single request", exp:"Larger context windows allow more information to be considered at once."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"What is a key risk of using generative AI outputs directly without review?", opts:["Hallucinated or inaccurate content may be presented as fact","The model will always refuse to respond","Outputs will always be identical for the same prompt","The model cannot generate any text at all"], correct:"Hallucinated or inaccurate content may be presented as fact", exp:"Outputs should often be verified, especially for factual or high-stakes use cases."},
+  {d:"Domain 2: Fundamentals of Generative AI", q:"\"Grounding\" a generative AI response means:", opts:["Connecting the model's output to verified, factual external data sources","Reducing the model's context window to zero","Increasing the model's temperature to maximum","Disabling the model's tokenizer"], correct:"Connecting the model's output to verified, factual external data sources", exp:"Grounding, often via RAG, helps reduce hallucinations by citing real data."},
+
+  // ---------------- DOMAIN 3: Applications of Foundation Models ----------------
+  {d:"Domain 3: Applications of Foundation Models", q:"\"Chain-of-thought\" prompting encourages a model to:", opts:["Reason through intermediate steps before producing a final answer","Ignore the user's original question","Output only single-word answers","Skip the retrieval step in RAG"], correct:"Reason through intermediate steps before producing a final answer", exp:"Chain-of-thought prompting often improves performance on multi-step reasoning tasks."},
+  {d:"Domain 3: Applications of Foundation Models", q:"What does RAG stand for in generative AI applications?", opts:["Retrieval-Augmented Generation","Random Access Generation","Rapid Attention Gateway","Recursive Algorithmic Grouping"], correct:"Retrieval-Augmented Generation", exp:"RAG retrieves relevant external data and feeds it into the model's prompt context."},
+  {d:"Domain 3: Applications of Foundation Models", q:"RAG primarily helps generative AI applications by:", opts:["Reducing hallucinations by grounding responses in retrieved external data","Increasing the model's training dataset size permanently","Eliminating the need for a foundation model entirely","Reducing the number of tokens billed per request"], correct:"Reducing hallucinations by grounding responses in retrieved external data", exp:"RAG supplies factual, up-to-date context at inference time without retraining."},
+  {d:"Domain 3: Applications of Foundation Models", q:"Amazon Bedrock Knowledge Bases enable:", opts:["RAG workflows by connecting foundation models to your own data sources","Manual retraining of foundation model weights","Direct access to AWS billing data","Real-time video transcoding"], correct:"RAG workflows by connecting foundation models to your own data sources", exp:"Knowledge Bases handle chunking, embedding, and retrieval automatically for RAG."},
+  {d:"Domain 3: Applications of Foundation Models", q:"Amazon Bedrock Agents are used to:", opts:["Orchestrate multi-step tasks and automatically call APIs or tools on the user's behalf","Encrypt data stored in Amazon S3","Manage IAM user permissions","Provision EC2 instances"], correct:"Orchestrate multi-step tasks and automatically call APIs or tools on the user's behalf", exp:"Agents break down complex requests and invoke actions/tools to complete them."},
+  {d:"Domain 3: Applications of Foundation Models", q:"Amazon Bedrock Guardrails are primarily used to:", opts:["Filter harmful content, redact PII, and enforce topic restrictions on model input/output","Speed up model training time","Reduce the cost of GPU instances","Automatically fine-tune a model with new data"], correct:"Filter harmful content, redact PII, and enforce topic restrictions on model input/output", exp:"Guardrails help enforce responsible AI policies at the application layer."},
+  {d:"Domain 3: Applications of Foundation Models", q:"Full fine-tuning of a foundation model involves:", opts:["Updating all of the model's weights using labeled, task-specific data","Only adjusting the temperature parameter","Only changing the system prompt","Deleting the model's pretrained knowledge"], correct:"Updating all of the model's weights using labeled, task-specific data", exp:"Full fine-tuning is compute-intensive since every parameter can be updated."},
+  {d:"Domain 3: Applications of Foundation Models", q:"Parameter-Efficient Fine-Tuning (PEFT), such as LoRA, works by:", opts:["Updating only a small subset of additional parameters, reducing compute and cost","Updating every parameter in the base model","Requiring no training data at all","Only working with image generation models"], correct:"Updating only a small subset of additional parameters, reducing compute and cost", exp:"PEFT methods like LoRA are far cheaper than full fine-tuning while still specializing a model."},
+  {d:"Domain 3: Applications of Foundation Models", q:"When should you generally choose prompt engineering over fine-tuning?", opts:["When you need quick iteration and don't have an extensive labeled dataset","When you need the model to permanently learn a brand-new domain vocabulary","When you need to change the model's core architecture","When the task requires retraining from scratch"], correct:"When you need quick iteration and don't have an extensive labeled dataset", exp:"Prompt engineering is faster and cheaper, best for tasks addressable without retraining."},
+  {d:"Domain 3: Applications of Foundation Models", q:"When should you generally choose fine-tuning over prompt engineering?", opts:["When consistent, specialized domain behavior is needed and prompting alone is insufficient","When you need a one-time answer to a simple question","When you have no labeled data available","When cost must be minimized above all else"], correct:"When consistent, specialized domain behavior is needed and prompting alone is insufficient", exp:"Fine-tuning is worth the added cost/complexity for deep, consistent specialization."},
+  {d:"Domain 3: Applications of Foundation Models", q:"Amazon SageMaker JumpStart provides:", opts:["Prebuilt ML solutions and foundation models to accelerate development","A service exclusively for relational database migration","A tool for managing IAM policies","A network firewall configuration service"], correct:"Prebuilt ML solutions and foundation models to accelerate development", exp:"JumpStart offers one-click deployment of popular pretrained and foundation models."},
+  {d:"Domain 3: Applications of Foundation Models", q:"When selecting a foundation model for a use case, which factor should you typically evaluate?", opts:["Cost, latency, context length, and modality support","The vendor's stock market performance","The color scheme of the AWS Management Console","The number of AWS Regions in existence"], correct:"Cost, latency, context length, and modality support", exp:"Model selection should be driven by functional and business requirements, not irrelevant factors."},
+  {d:"Domain 3: Applications of Foundation Models", q:"\"Latency\" in model inference refers to:", opts:["The time taken to produce a response after a request is made","The total number of parameters in a model","The number of tokens in the training dataset","The physical storage size of the model"], correct:"The time taken to produce a response after a request is made", exp:"Lower latency matters for real-time or interactive applications."},
+  {d:"Domain 3: Applications of Foundation Models", q:"\"Throughput\" in model inference refers to:", opts:["The number of requests or tokens a system can process per unit of time","The accuracy of the model's predictions","The size of the model's context window","The number of labeled examples used in training"], correct:"The number of requests or tokens a system can process per unit of time", exp:"Throughput measures overall processing capacity, distinct from per-request latency."},
+  {d:"Domain 3: Applications of Foundation Models", q:"The ROUGE metric is commonly used to evaluate:", opts:["Summarization quality by comparing generated text to a reference summary","Image classification accuracy","Network latency in milliseconds","Database query performance"], correct:"Summarization quality by comparing generated text to a reference summary", exp:"ROUGE measures overlap between generated and reference text, common for summarization."},
+  {d:"Domain 3: Applications of Foundation Models", q:"The BLEU metric is commonly used to evaluate:", opts:["Machine translation quality","Model training speed","Storage encryption strength","API request throughput"], correct:"Machine translation quality", exp:"BLEU compares machine-generated translations against human reference translations."},
+  {d:"Domain 3: Applications of Foundation Models", q:"Why is human evaluation still valuable for generative AI systems?", opts:["Automated metrics don't fully capture quality, coherence, or relevance of generated content","Automated metrics are always more accurate than humans","Human evaluation is required by AWS for all deployments","Human evaluation eliminates the need for any automated metrics"], correct:"Automated metrics don't fully capture quality, coherence, or relevance of generated content", exp:"Human review complements automated metrics, especially for subjective quality judgments."},
+  {d:"Domain 3: Applications of Foundation Models", q:"Amazon Q Business is designed to:", opts:["Answer questions and generate content grounded in an organization's enterprise data","Manage AWS billing invoices exclusively","Provision new AWS accounts","Replace the AWS Management Console entirely"], correct:"Answer questions and generate content grounded in an organization's enterprise data", exp:"Amazon Q Business is a generative AI assistant for enterprise use cases."},
+  {d:"Domain 3: Applications of Foundation Models", q:"Amazon Q Developer primarily helps with:", opts:["Code generation, debugging, and explanation within IDEs","Managing HR employee records","Optimizing marketing email campaigns","Configuring physical data center hardware"], correct:"Code generation, debugging, and explanation within IDEs", exp:"Amazon Q Developer is a generative AI assistant tailored for software development tasks."},
+  {d:"Domain 3: Applications of Foundation Models", q:"A \"prompt injection\" attack involves:", opts:["Malicious input designed to override or manipulate a model's original instructions","A hardware fault that corrupts training data","A denial-of-service attack on a database","Overloading the GPU with excessive tokens only"], correct:"Malicious input designed to override or manipulate a model's original instructions", exp:"Prompt injection is a security risk that guardrails and input validation can help mitigate."},
+  {d:"Domain 3: Applications of Foundation Models", q:"Amazon Bedrock's Model Evaluation feature helps you:", opts:["Compare model outputs against metrics or human review to assess quality","Automatically patch security vulnerabilities in EC2 instances","Provision new VPC subnets","Encrypt training data at rest"], correct:"Compare model outputs against metrics or human review to assess quality", exp:"Model Evaluation supports both automatic metrics and human-based evaluation workflows."},
+  {d:"Domain 3: Applications of Foundation Models", q:"In a RAG pipeline, the retrieval step typically uses:", opts:["A vector similarity search against a store of embeddings","A regular expression pattern match only","A manual keyword lookup table maintained by developers","A random sampling of documents"], correct:"A vector similarity search against a store of embeddings", exp:"Relevant chunks are retrieved by comparing the query embedding to stored embeddings."},
+  {d:"Domain 3: Applications of Foundation Models", q:"What is a key benefit of using a smaller foundation model for a narrow, well-defined task?", opts:["Lower cost and latency compared to a larger general-purpose model","Guaranteed elimination of hallucinations","Unlimited context window size","Automatic multilingual support"], correct:"Lower cost and latency compared to a larger general-purpose model", exp:"Smaller, task-specific models can be more efficient when broad capability isn't needed."},
+  {d:"Domain 3: Applications of Foundation Models", q:"In Amazon Bedrock, \"provisioned throughput\" is best used when you need:", opts:["Reserved, consistent capacity for predictable performance at a higher fixed cost","The cheapest possible pay-per-token pricing with variable latency","No SLA guarantees at all","A one-time free trial of a model"], correct:"Reserved, consistent capacity for predictable performance at a higher fixed cost", exp:"Provisioned throughput trades flexibility for guaranteed capacity, ideal for production workloads."},
+  {d:"Domain 3: Applications of Foundation Models", q:"Customizing a foundation model with your own labeled data in Amazon Bedrock is referred to as:", opts:["Fine-tuning or continued pretraining","Prompt caching","Guardrail configuration","Model distillation only"], correct:"Fine-tuning or continued pretraining", exp:"Bedrock supports customizing select models with your own data via fine-tuning."},
+  {d:"Domain 3: Applications of Foundation Models", q:"Which technique reduces hallucinations without requiring the model to be retrained?", opts:["RAG, which grounds responses using retrieved factual data","Increasing the temperature parameter to maximum","Removing the system prompt entirely","Reducing the context window to its minimum size"], correct:"RAG, which grounds responses using retrieved factual data", exp:"RAG supplements the model's knowledge at inference time, no retraining required."},
+  {d:"Domain 3: Applications of Foundation Models", q:"What is a key advantage of using Amazon Bedrock instead of self-hosting foundation models?", opts:["No infrastructure to manage, pay-as-you-go pricing, and access to multiple FMs via one API","It requires you to manage your own GPU clusters","It only supports a single foundation model provider","It requires purchasing dedicated on-premises hardware"], correct:"No infrastructure to manage, pay-as-you-go pricing, and access to multiple FMs via one API", exp:"Bedrock is a serverless, fully managed way to access and build with foundation models."},
+  {d:"Domain 3: Applications of Foundation Models", q:"\"Few-shot prompting\" requires the prompt author to:", opts:["Provide a handful of input-output examples directly within the prompt","Retrain the entire model on thousands of examples","Disable the model's tokenizer","Use only image inputs, never text"], correct:"Provide a handful of input-output examples directly within the prompt", exp:"Few-shot examples help the model infer the desired pattern or format for its response."},
+  {d:"Domain 3: Applications of Foundation Models", q:"In a chat-based LLM API, the \"system\" role message is used to:", opts:["Define the assistant's behavior or persona before the user interaction begins","Store the final generated answer","Represent the end user's raw input only","Configure the underlying GPU driver"], correct:"Define the assistant's behavior or persona before the user interaction begins", exp:"System messages set high-level instructions that persist throughout the conversation."},
+  {d:"Domain 3: Applications of Foundation Models", q:"Which AWS tool lets users quickly build and share generative AI apps using a simple, guided interface without writing code?", opts:["PartyRock, an Amazon Bedrock playground","Amazon Redshift","AWS Direct Connect","Amazon Elastic Beanstalk"], correct:"PartyRock, an Amazon Bedrock playground", exp:"PartyRock is a no-code playground for experimenting with Bedrock foundation models."},
+  {d:"Domain 3: Applications of Foundation Models", q:"What is the purpose of embeddings in a semantic search application?", opts:["Representing text meaning as vectors so that similarity can be computed mathematically","Encrypting search queries for compliance purposes","Storing raw HTML for a web page","Managing user session cookies"], correct:"Representing text meaning as vectors so that similarity can be computed mathematically", exp:"Semantic search compares embedding vectors rather than exact keyword matches."},
+  {d:"Domain 3: Applications of Foundation Models", q:"Which practice helps optimize cost for a generative AI application?", opts:["Choosing an appropriately sized model and minimizing unnecessary prompt length","Always selecting the largest available foundation model","Maximizing the context window on every single request","Disabling all caching mechanisms"], correct:"Choosing an appropriately sized model and minimizing unnecessary prompt length", exp:"Right-sizing the model and prompt reduces token usage and cost."},
+  {d:"Domain 3: Applications of Foundation Models", q:"What is a common technique to get an LLM to reliably output structured data, such as JSON?", opts:["Providing explicit formatting instructions and examples within the prompt","Increasing the temperature to its maximum value","Removing all instructions from the prompt","Disabling the model's context window"], correct:"Providing explicit formatting instructions and examples within the prompt", exp:"Clear formatting instructions and examples guide the model toward consistent structured output."},
+  {d:"Domain 3: Applications of Foundation Models", q:"Amazon Kendra is best described as:", opts:["An intelligent enterprise search service","A relational database migration tool","A video transcoding service","A container orchestration platform"], correct:"An intelligent enterprise search service", exp:"Kendra provides natural language search across enterprise content repositories."},
+  {d:"Domain 3: Applications of Foundation Models", q:"Which scenario is best suited for fine-tuning rather than prompt engineering alone?", opts:["Teaching a model a highly specialized domain vocabulary and consistent output style across many requests","Answering a single one-off factual question","Formatting a single response as a bulleted list","Adjusting the tone of one specific reply"], correct:"Teaching a model a highly specialized domain vocabulary and consistent output style across many requests", exp:"Fine-tuning is worthwhile when consistent specialized behavior is needed at scale."},
+  {d:"Domain 3: Applications of Foundation Models", q:"\"Model distillation\" refers to:", opts:["Training a smaller model to mimic the behavior of a larger model","Removing all training data after a model is deployed","Encrypting model weights for secure storage","Combining two unrelated models into a single API endpoint"], correct:"Training a smaller model to mimic the behavior of a larger model", exp:"Distillation produces smaller, cheaper models that approximate a larger \"teacher\" model's behavior."},
+
+  // ---------------- DOMAIN 4: Guidelines for Responsible AI ----------------
+  {d:"Domain 4: Guidelines for Responsible AI", q:"Bias in a machine learning model most commonly originates from:", opts:["Unrepresentative or skewed training data","Using too many GPUs during training","Having too large a context window","Using a vector database for retrieval"], correct:"Unrepresentative or skewed training data", exp:"If training data underrepresents certain groups, the model can produce biased outcomes."},
+  {d:"Domain 4: Guidelines for Responsible AI", q:"Fairness in AI systems refers to:", opts:["Ensuring models do not systematically disadvantage particular groups of people","Ensuring all models use the same hyperparameters","Ensuring every model has an identical context window","Ensuring model training only uses unlabeled data"], correct:"Ensuring models do not systematically disadvantage particular groups of people", exp:"Fairness aims to avoid discriminatory outcomes across demographic groups."},
+  {d:"Domain 4: Guidelines for Responsible AI", q:"\"Explainability\" in AI refers to:", opts:["The ability to describe how or why a model arrived at a particular decision","The speed at which a model returns a prediction","The number of parameters in a model","The cost of running inference"], correct:"The ability to describe how or why a model arrived at a particular decision", exp:"Explainability helps stakeholders trust and audit model decisions."},
+  {d:"Domain 4: Guidelines for Responsible AI", q:"\"Interpretability\" in AI refers to:", opts:["The degree to which a human can understand a model's internal logic","The physical size of the training dataset","The number of GPUs required for inference","The latency of an API endpoint"], correct:"The degree to which a human can understand a model's internal logic", exp:"More interpretable models are easier for humans to reason about and trust."},
+  {d:"Domain 4: Guidelines for Responsible AI", q:"Amazon SageMaker Clarify is used to:", opts:["Detect bias in data and models and help explain model predictions","Provision new EC2 compute instances","Manage DNS routing for an application","Encrypt data stored in Amazon S3"], correct:"Detect bias in data and models and help explain model predictions", exp:"Clarify provides bias metrics and feature attribution explanations for ML models."},
+  {d:"Domain 4: Guidelines for Responsible AI", q:"A \"model card\" typically documents:", opts:["A model's intended use, performance, limitations, and ethical considerations","The exact source code of a model's training script","A model's billing invoice history","The physical hardware specifications of a data center"], correct:"A model's intended use, performance, limitations, and ethical considerations", exp:"Model cards promote transparency about a model's capabilities and appropriate use."},
+  {d:"Domain 4: Guidelines for Responsible AI", q:"\"Human-in-the-loop\" refers to:", opts:["Having humans review, validate, or correct AI-generated outputs","Fully automating a process with zero human oversight","Removing all humans from the data labeling process","A hardware requirement for GPU-based training"], correct:"Having humans review, validate, or correct AI-generated outputs", exp:"Human oversight helps catch errors and biases that automated systems might miss."},
+  {d:"Domain 4: Guidelines for Responsible AI", q:"Toxicity filtering on generative AI outputs is designed to:", opts:["Prevent harmful, offensive, or inappropriate content from being generated","Increase the model's response speed","Reduce the model's token cost","Improve the model's translation accuracy"], correct:"Prevent harmful, offensive, or inappropriate content from being generated", exp:"Toxicity filters, such as Bedrock Guardrails, help enforce content safety policies."},
+  {d:"Domain 4: Guidelines for Responsible AI", q:"\"Robustness\" of a model refers to:", opts:["Its ability to maintain performance under varied or adversarial inputs","Its ability to run without any electricity","The number of labels used during training","The size of its context window"], correct:"Its ability to maintain performance under varied or adversarial inputs", exp:"Robust models resist performance degradation from noisy or adversarial data."},
+  {d:"Domain 4: Guidelines for Responsible AI", q:"Transparency in AI systems means:", opts:["Being clear about how AI is used and communicating its capabilities and limitations","Hiding all technical details from end users","Publishing raw training data publicly regardless of privacy concerns","Guaranteeing 100% model accuracy"], correct:"Being clear about how AI is used and communicating its capabilities and limitations", exp:"Transparency builds user trust and supports informed decision-making."},
+  {d:"Domain 4: Guidelines for Responsible AI", q:"Considering the environmental impact of AI involves:", opts:["Accounting for the energy and compute consumption of training and running models","Ignoring compute costs entirely","Only considering the cost of data storage","Focusing solely on model accuracy metrics"], correct:"Accounting for the energy and compute consumption of training and running models", exp:"Large-scale training and inference can have significant energy and carbon footprints."},
+  {d:"Domain 4: Guidelines for Responsible AI", q:"Inclusivity in AI system design means:", opts:["Ensuring systems work well across diverse users and use cases","Designing systems for only one demographic group","Reducing the number of supported languages to one","Limiting access to the system to internal employees only"], correct:"Ensuring systems work well across diverse users and use cases", exp:"Inclusive design considers accessibility and diversity across the user base."},
+  {d:"Domain 4: Guidelines for Responsible AI", q:"Which practice helps reduce bias in a model's training data?", opts:["Ensuring the data is diverse and representative of the target population","Using the smallest possible dataset available","Only collecting data from a single demographic group","Avoiding any data quality review process"], correct:"Ensuring the data is diverse and representative of the target population", exp:"Diverse, representative data reduces the risk of skewed or unfair model outcomes."},
+  {d:"Domain 4: Guidelines for Responsible AI", q:"Why is responsible AI governance important for generative AI systems?", opts:["To ensure ethical, safe, and compliant use of AI across an organization","To increase the model's token limit","To reduce the number of available foundation models","To eliminate the need for any security controls"], correct:"To ensure ethical, safe, and compliant use of AI across an organization", exp:"Governance frameworks help manage risk, compliance, and ethical use of AI at scale."},
+  {d:"Domain 4: Guidelines for Responsible AI", q:"Amazon Bedrock Guardrails support responsible AI by:", opts:["Blocking denied topics and filtering harmful or personally identifiable content","Increasing the model's parameter count","Automatically translating text into every language","Removing the need for a system prompt"], correct:"Blocking denied topics and filtering harmful or personally identifiable content", exp:"Guardrails let teams configure content and topic policies enforced at runtime."},
+  {d:"Domain 4: Guidelines for Responsible AI", q:"What is a key responsible AI consideration when deploying a facial recognition system?", opts:["Ensuring the technology does not exhibit demographic bias and complies with relevant regulations","Maximizing the number of faces processed per second above all else","Avoiding any human review of flagged matches","Using the largest possible training dataset regardless of source"], correct:"Ensuring the technology does not exhibit demographic bias and complies with relevant regulations", exp:"Facial recognition has known bias risks and is subject to significant regulatory scrutiny."},
+  {d:"Domain 4: Guidelines for Responsible AI", q:"Which scenario best illustrates a hallucination-related responsible AI concern?", opts:["A chatbot confidently providing incorrect factual information to a user","A model correctly declining to answer an out-of-scope question","A model taking longer than expected to respond","A model using more tokens than budgeted for a request"], correct:"A chatbot confidently providing incorrect factual information to a user", exp:"Confidently wrong answers can mislead users, making mitigation like RAG important."},
+  {d:"Domain 4: Guidelines for Responsible AI", q:"Why should organizations conduct regular AI audits?", opts:["To continually monitor for bias, model drift, and compliance issues","To increase the model's context window size","To reduce the number of employees needed for AI projects","To guarantee zero operating cost"], correct:"To continually monitor for bias, model drift, and compliance issues", exp:"Ongoing audits help catch issues that emerge after a model is deployed to production."},
+
+  // ---------------- DOMAIN 5: Security, Compliance, and Governance for AI Solutions ----------------
+  {d:"Domain 5: Security, Compliance, and Governance", q:"Under the AWS Shared Responsibility Model, AWS is responsible for:", opts:["Security \"of\" the cloud, including the underlying infrastructure","Security \"in\" the cloud, including customer data configuration","Configuring every customer's IAM policies","Writing customer application code"], correct:"Security \"of\" the cloud, including the underlying infrastructure", exp:"AWS secures the infrastructure; customers secure what they put in the cloud."},
+  {d:"Domain 5: Security, Compliance, and Governance", q:"Under the AWS Shared Responsibility Model, the customer is responsible for:", opts:["Security \"in\" the cloud, such as data protection and access management","Physical security of AWS data centers","Maintaining the AWS global network backbone","Patching the AWS hypervisor"], correct:"Security \"in\" the cloud, such as data protection and access management", exp:"Customers configure and manage data, IAM, and application-level security."},
+  {d:"Domain 5: Security, Compliance, and Governance", q:"Which AWS service manages encryption keys for data at rest?", opts:["AWS Key Management Service (KMS)","AWS CloudTrail","Amazon Macie","AWS Artifact"], correct:"AWS Key Management Service (KMS)", exp:"KMS centrally manages cryptographic keys used to encrypt data across AWS services."},
+  {d:"Domain 5: Security, Compliance, and Governance", q:"Which AWS service provides an audit trail of API calls made within an account?", opts:["AWS CloudTrail","Amazon Comprehend","Amazon Polly","AWS Glue"], correct:"AWS CloudTrail", exp:"CloudTrail logs API activity, useful for security analysis and compliance auditing."},
+  {d:"Domain 5: Security, Compliance, and Governance", q:"What does PII stand for?", opts:["Personally Identifiable Information","Public Internet Infrastructure","Protected Inference Interface","Primary Input Identifier"], correct:"Personally Identifiable Information", exp:"PII refers to data that can identify a specific individual, requiring careful protection."},
+  {d:"Domain 5: Security, Compliance, and Governance", q:"Amazon Bedrock Guardrails can help protect sensitive data by:", opts:["Redacting or blocking PII in model inputs and outputs","Automatically training a new foundation model","Increasing the model's context window","Reducing inference latency"], correct:"Redacting or blocking PII in model inputs and outputs", exp:"Guardrails can be configured to detect and mask sensitive information like PII."},
+  {d:"Domain 5: Security, Compliance, and Governance", q:"Which AWS service centralizes access to compliance reports such as SOC and ISO certifications?", opts:["AWS Artifact","AWS Config","Amazon Inspector","AWS Trusted Advisor"], correct:"AWS Artifact", exp:"AWS Artifact provides on-demand access to AWS compliance and security reports."},
+  {d:"Domain 5: Security, Compliance, and Governance", q:"Data encryption in transit is typically achieved using:", opts:["TLS/SSL protocols","Plain-text HTTP only","Unencrypted FTP","Local disk encryption only"], correct:"TLS/SSL protocols", exp:"TLS/SSL encrypts data as it moves across networks, protecting it from interception."},
+  {d:"Domain 5: Security, Compliance, and Governance", q:"AWS Identity and Access Management (IAM) is used to:", opts:["Manage authentication and authorization for accessing AWS resources","Encrypt data stored in Amazon S3 buckets","Monitor network latency between regions","Automatically fine-tune foundation models"], correct:"Manage authentication and authorization for accessing AWS resources", exp:"IAM controls who can access which AWS resources and what actions they can perform."},
+  {d:"Domain 5: Security, Compliance, and Governance", q:"The principle of \"least privilege\" means:", opts:["Granting only the minimum permissions necessary to perform a required task","Granting all users full administrator access by default","Disabling all IAM policies","Giving every service unrestricted network access"], correct:"Granting only the minimum permissions necessary to perform a required task", exp:"Least privilege reduces the potential blast radius of compromised credentials."},
+  {d:"Domain 5: Security, Compliance, and Governance", q:"Which regulation focuses on data privacy protections for individuals in the European Union?", opts:["GDPR (General Data Protection Regulation)","HIPAA","SOC 2","PCI DSS"], correct:"GDPR (General Data Protection Regulation)", exp:"GDPR governs how organizations collect, process, and protect EU residents' personal data."},
+  {d:"Domain 5: Security, Compliance, and Governance", q:"Which regulation focuses on protected health information in the United States?", opts:["HIPAA (Health Insurance Portability and Accountability Act)","GDPR","FedRAMP","CCPA"], correct:"HIPAA (Health Insurance Portability and Accountability Act)", exp:"HIPAA sets standards for protecting sensitive patient health information in the US."},
+  {d:"Domain 5: Security, Compliance, and Governance", q:"\"Data residency\" refers to:", opts:["A requirement that data be stored or processed in a specific geographic location","The speed at which data can be queried","The compression ratio of stored data","The number of replicas of a database"], correct:"A requirement that data be stored or processed in a specific geographic location", exp:"Data residency requirements often stem from legal or regulatory obligations."},
+  {d:"Domain 5: Security, Compliance, and Governance", q:"An Amazon VPC (Virtual Private Cloud) is used to:", opts:["Isolate and control network access to AWS resources","Store encryption keys centrally","Provide compliance certification reports","Train foundation models on private data"], correct:"Isolate and control network access to AWS resources", exp:"VPCs let you define an isolated network environment with fine-grained access control."},
+  {d:"Domain 5: Security, Compliance, and Governance", q:"Amazon Macie is used to:", opts:["Discover and help protect sensitive data, such as PII, stored in Amazon S3","Train large language models","Manage container orchestration","Provision virtual private networks"], correct:"Discover and help protect sensitive data, such as PII, stored in Amazon S3", exp:"Macie uses ML to automatically identify and classify sensitive data at scale."},
+  {d:"Domain 5: Security, Compliance, and Governance", q:"Why is model access control important in a generative AI application?", opts:["To prevent unauthorized use, data leakage, and misuse of the model","To increase the number of tokens processed per second","To reduce the model's context window size","To eliminate the need for a system prompt"], correct:"To prevent unauthorized use, data leakage, and misuse of the model", exp:"Restricting who can invoke a model and with what data reduces security and compliance risk."},
+  {d:"Domain 5: Security, Compliance, and Governance", q:"Which practice helps ensure compliance when using customer data to fine-tune a model?", opts:["Obtaining proper consent and following organizational data governance policies","Skipping any data review to save time","Sharing the raw data publicly for transparency","Avoiding all documentation of data sources"], correct:"Obtaining proper consent and following organizational data governance policies", exp:"Proper consent and governance help ensure lawful and ethical use of customer data."},
+  {d:"Domain 5: Security, Compliance, and Governance", q:"What is a key security consideration when integrating an LLM with internal company data through RAG?", opts:["Ensuring access controls on retrieved data respect each user's existing permissions","Maximizing the model's temperature setting","Disabling encryption to improve retrieval speed","Allowing every user to query all internal data regardless of role"], correct:"Ensuring access controls on retrieved data respect each user's existing permissions", exp:"RAG systems must enforce the same permission boundaries as the underlying data sources."},
+  {d:"Domain 5: Security, Compliance, and Governance", q:"Why might an organization view Amazon Bedrock's data handling policies as a security benefit?", opts:["Bedrock does not use customer prompts or outputs to train or improve the underlying base models","Bedrock stores all customer prompts publicly by default","Bedrock requires customers to disable all encryption","Bedrock shares customer data with all model providers automatically"], correct:"Bedrock does not use customer prompts or outputs to train or improve the underlying base models", exp:"This data handling approach helps protect customer confidentiality and IP."}
+];
+
+let quizQuestions = [];
+let userAnswers = [];
+let currentIndex = 0;
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz() {
+  quizQuestions = shuffle(QUESTIONS).map(q => ({
+    d: q.d,
+    q: q.q,
+    exp: q.exp,
+    correct: q.correct,
+    opts: shuffle(q.opts)
+  }));
+  userAnswers = new Array(quizQuestions.length).fill(null);
+  currentIndex = 0;
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  buildPalette();
+  renderQuestion();
+}
+
+function buildPalette() {
+  const palette = document.getElementById('palette');
+  palette.innerHTML = '';
+  quizQuestions.forEach((_, i) => {
+    const btn = document.createElement('button');
+    btn.textContent = i + 1;
+    btn.onclick = () => { currentIndex = i; renderQuestion(); };
+    btn.id = 'palette-btn-' + i;
+    palette.appendChild(btn);
+  });
+}
+
+function updatePalette() {
+  quizQuestions.forEach((_, i) => {
+    const btn = document.getElementById('palette-btn-' + i);
+    btn.classList.toggle('answered', userAnswers[i] !== null);
+    btn.classList.toggle('current', i === currentIndex);
+  });
+}
+
+function renderQuestion() {
+  const total = quizQuestions.length;
+  const q = quizQuestions[currentIndex];
+  document.getElementById('progress-label').textContent = 'Question ' + (currentIndex + 1) + ' of ' + total;
+  const answeredCount = userAnswers.filter(a => a !== null).length;
+  document.getElementById('answered-label').textContent = answeredCount + ' answered';
+  document.getElementById('progress-fill').style.width = Math.round(((currentIndex + 1) / total) * 100) + '%';
+  document.getElementById('domain-tag').textContent = q.d;
+  document.getElementById('question-text').textContent = (currentIndex + 1) + '. ' + q.q;
+
+  const optionsDiv = document.getElementById('options');
+  optionsDiv.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const label = document.createElement('label');
+    label.className = 'option' + (userAnswers[currentIndex] === opt ? ' selected' : '');
+    label.innerHTML = '<input type="radio" name="opt" ' + (userAnswers[currentIndex] === opt ? 'checked' : '') + '><span></span>';
+    label.querySelector('span').textContent = opt;
+    label.onclick = () => {
+      userAnswers[currentIndex] = opt;
+      renderQuestion();
+    };
+    optionsDiv.appendChild(label);
+  });
+
+  document.getElementById('prev-btn').disabled = currentIndex === 0;
+  const isLast = currentIndex === total - 1;
+  document.getElementById('next-btn').style.display = isLast ? 'none' : 'inline-block';
+  document.getElementById('finish-btn').style.display = isLast ? 'inline-block' : 'none';
+
+  updatePalette();
+}
+
+function nextQuestion() {
+  if (currentIndex < quizQuestions.length - 1) {
+    currentIndex++;
+    renderQuestion();
+  }
+}
+
+function prevQuestion() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    renderQuestion();
+  }
+}
+
+function confirmFinish() {
+  const unanswered = userAnswers.filter(a => a === null).length;
+  if (unanswered > 0) {
+    const proceed = confirm(unanswered + ' question(s) are still unanswered. Finish the exam anyway?');
+    if (!proceed) return;
+  }
+  finishQuiz();
+}
+
+function finishQuiz() {
+  let score = 0;
+  let incorrect = 0;
+  let unanswered = 0;
+
+  const reviewList = document.getElementById('review-list');
+  reviewList.innerHTML = '';
+
+  quizQuestions.forEach((q, i) => {
+    const userAns = userAnswers[i];
+    const isCorrect = userAns === q.correct;
+    if (userAns === null) unanswered++;
+    else if (isCorrect) score++;
+    else incorrect++;
+
+    const item = document.createElement('div');
+    item.className = 'review-item ' + (isCorrect ? 'correct' : 'incorrect');
+    const rq = document.createElement('div');
+    rq.className = 'rq';
+    rq.textContent = (i + 1) + '. ' + q.q;
+    item.appendChild(rq);
+
+    const yourAns = document.createElement('div');
+    yourAns.className = 'ra' + (isCorrect ? '' : ' your-wrong');
+    yourAns.textContent = 'Your answer: ' + (userAns === null ? 'No answer' : userAns);
+    item.appendChild(yourAns);
+
+    if (!isCorrect) {
+      const correctAns = document.createElement('div');
+      correctAns.className = 'ra correct-answer';
+      correctAns.textContent = 'Correct answer: ' + q.correct;
+      item.appendChild(correctAns);
+    }
+
+    if (q.exp) {
+      const exp = document.createElement('div');
+      exp.className = 'exp';
+      exp.textContent = q.exp;
+      item.appendChild(exp);
+    }
+
+    reviewList.appendChild(item);
+  });
+
+  const total = quizQuestions.length;
+  const pct = Math.round((score / total) * 100);
+  const passed = pct >= 70;
+
+  document.getElementById('score-big').textContent = score + ' / ' + total;
+  document.getElementById('score-big').className = 'score-big ' + (passed ? 'pass' : 'fail');
+  document.getElementById('pass-label').textContent = passed ? 'PASS' : 'DID NOT PASS';
+  document.getElementById('pass-label').className = passed ? 'pass' : 'fail';
+  document.getElementById('stat-correct').textContent = score;
+  document.getElementById('stat-incorrect').textContent = incorrect;
+  document.getElementById('stat-unanswered').textContent = unanswered;
+  document.getElementById('stat-pct').textContent = pct + '%';
+
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function toggleReview() {
+  const list = document.getElementById('review-list');
+  const btn = document.getElementById('review-toggle-btn');
+  const visible = list.style.display === 'block';
+  list.style.display = visible ? 'none' : 'block';
+  btn.textContent = visible ? 'Show Answer Review' : 'Hide Answer Review';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AWS Certified AI Practitioner (AIF-C01) — Practice Quiz (130 Q)</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --card-2: #334155;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --primary: #f59e0b;     /* AWS orange */
+    --primary-dk: #b45309;
+    --accent: #38bdf8;
+    --good: #22c55e;
+    --good-bg: #14532d;
+    --bad: #ef4444;
+    --bad-bg: #7f1d1d;
+    --border: #475569;
+    --shadow: 0 10px 30px rgba(0,0,0,.35);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+  header {
+    text-align: center;
+    padding: 24px 12px 12px;
+  }
+  header h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    color: var(--primary);
+    letter-spacing: .3px;
+  }
+  header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .aws-logo {
+    display: inline-block;
+    font-weight: 800;
+    font-size: 13px;
+    color: #fff;
+    background: #232f3e;
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--card-2);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 20px 0 24px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    width: 0%;
+    transition: width .3s ease;
+  }
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: var(--shadow);
+  }
+  .question-domain {
+    display: inline-block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--primary);
+    background: rgba(245, 158, 11, .12);
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+    font-weight: 700;
+  }
+  .question-text {
+    font-size: 17px;
+    line-height: 1.55;
+    margin: 0 0 22px;
+    font-weight: 500;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .option {
+    background: var(--card-2);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all .15s ease;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+  .option:hover:not(.disabled) {
+    border-color: var(--primary);
+    background: #3f4d63;
+    transform: translateY(-1px);
+  }
+  .option .letter {
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--border);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .option.correct {
+    background: var(--good-bg);
+    border-color: var(--good);
+  }
+  .option.correct .letter {
+    background: var(--good);
+    color: #fff;
+  }
+  .option.wrong {
+    background: var(--bad-bg);
+    border-color: var(--bad);
+  }
+  .option.wrong .letter {
+    background: var(--bad);
+    color: #fff;
+  }
+  .option.disabled {
+    cursor: not-allowed;
+    opacity: .9;
+  }
+  .explanation {
+    margin-top: 18px;
+    padding: 16px;
+    background: rgba(56, 189, 248, .08);
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: #cbd5e1;
+  }
+  .explanation strong { color: var(--accent); }
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+    gap: 10px;
+  }
+  button {
+    background: var(--primary);
+    color: #0f172a;
+    border: 0;
+    padding: 12px 22px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  button:hover:not(:disabled) {
+    background: #fbbf24;
+    transform: translateY(-1px);
+  }
+  button:disabled {
+    background: var(--card-2);
+    color: var(--muted);
+    cursor: not-allowed;
+  }
+  button.secondary {
+    background: var(--card-2);
+    color: var(--text);
+  }
+  button.secondary:hover:not(:disabled) {
+    background: #475569;
+  }
+  /* Results */
+  .results-wrap {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .score-circle {
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: conic-gradient(var(--primary) 0deg, var(--card-2) 0deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    position: relative;
+  }
+  .score-circle::after {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    background: var(--card);
+    border-radius: 50%;
+  }
+  .score-text {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+  .score-text .pct {
+    font-size: 44px;
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1;
+  }
+  .score-text .lbl {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .verdict {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+  .verdict.pass { color: var(--good); }
+  .verdict.fail { color: var(--bad); }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin: 28px 0;
+  }
+  .stat {
+    background: var(--card-2);
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .stat .v {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--primary);
+  }
+  .stat .l {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .domain-breakdown {
+    margin: 28px 0;
+    text-align: left;
+  }
+  .domain-breakdown h3 {
+    font-size: 16px;
+    color: var(--text);
+    margin: 0 0 12px;
+  }
+  .domain-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-size: 13px;
+  }
+  .domain-name {
+    flex: 1;
+    color: var(--text);
+  }
+  .domain-bar {
+    flex: 1.5;
+    height: 10px;
+    background: var(--card-2);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .domain-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--primary));
+  }
+  .domain-pct {
+    width: 60px;
+    text-align: right;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .review-list {
+    margin-top: 28px;
+    text-align: left;
+  }
+  .review-list h3 {
+    font-size: 16px;
+    margin: 0 0 16px;
+  }
+  .review-item {
+    background: var(--card-2);
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border-left: 4px solid var(--border);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .review-item.wrong-r { border-left-color: var(--bad); }
+  .review-item.right-r { border-left-color: var(--good); }
+  .review-item .q {
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .review-item .a {
+    color: var(--muted);
+  }
+  .review-item .a b { color: var(--good); }
+  .review-item .a u { color: var(--bad); text-decoration: line-through; }
+  .start-screen {
+    text-align: center;
+    padding: 30px 12px;
+  }
+  .start-screen h2 {
+    color: var(--primary);
+    font-size: 24px;
+    margin: 12px 0 8px;
+  }
+  .start-screen p {
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto 20px;
+  }
+  .start-screen ul {
+    text-align: left;
+    max-width: 520px;
+    margin: 0 auto 24px;
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 14px;
+  }
+  .start-btn {
+    font-size: 16px;
+    padding: 14px 36px;
+  }
+  @media (max-width: 600px) {
+    .card { padding: 20px; }
+    header h1 { font-size: 22px; }
+    .question-text { font-size: 15px; }
+    .option { font-size: 14px; padding: 12px 14px; }
+    .score-circle { width: 160px; height: 160px; }
+    .score-text .pct { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <span class="aws-logo">aws</span>
+    <h1>AWS Certified AI Practitioner (AIF-C01)</h1>
+    <p>Practice Exam — 130 Questions</p>
+  </header>
+
+  <div id="app"></div>
+</div>
+
+<script>
+/* ============================================================
+   AWS Certified AI Practitioner (AIF-C01) — 130 questions
+   Domains covered (per AWS exam guide):
+     1. Fundamentals of AI/ML
+     2. Fundamentals of Generative AI
+     3. Applications of Foundation Models
+     4. Guidelines for Responsible AI
+     5. Security/Compliance/Governance for AI
+     6. (Mixed / cross-domain)
+   ============================================================ */
+
+const QUESTIONS = [
+  { d: "Fundamentals of AI/ML", q: "Which AWS service is used to build, train, and deploy machine learning models at scale?",
+    o: ["Amazon SageMaker", "Amazon Comprehend", "AWS Glue", "Amazon Rekognition"],
+    a: 0,
+    e: "Amazon SageMaker is AWS's primary managed service for building, training, tuning, and deploying ML models." },
+  { d: "Fundamentals of AI/ML", q: "What type of machine learning uses labeled training data to learn a mapping from inputs to outputs?",
+    o: ["Supervised learning", "Unsupervised learning", "Reinforcement learning", "Self-supervised learning"],
+    a: 0,
+    e: "Supervised learning uses labeled datasets to learn an input→output mapping (e.g. classification, regression)." },
+  { d: "Fundamentals of AI/ML", q: "Which AWS service provides pre-trained APIs for extracting text, sentiment, and entities from documents?",
+    o: ["Amazon Comprehend", "Amazon Translate", "Amazon Polly", "Amazon Forecast"],
+    a: 0,
+    e: "Amazon Comprehend is a natural language processing (NLP) service that uses ML to find insights and relationships in text." },
+  { d: "Fundamentals of AI/ML", q: "A company wants to forecast future product demand based on historical time-series data. Which AWS service is purpose-built for this?",
+    o: ["Amazon Forecast", "Amazon Rekognition", "Amazon Lex", "AWS DeepRacer"],
+    a: 0,
+    e: "Amazon Forecast uses ML to deliver highly accurate time-series forecasts based on the same technology used at Amazon.com." },
+  { d: "Fundamentals of AI/ML", q: "Which AWS service is best suited for real-time language translation?",
+    o: ["Amazon Translate", "Amazon Comprehend", "Amazon Transcribe", "Amazon Polly"],
+    a: 0,
+    e: "Amazon Translate is a neural machine translation service for translating text between languages." },
+  { d: "Fundamentals of AI/ML", q: "A team needs to convert speech to text in audio files. Which service should they use?",
+    o: ["Amazon Transcribe", "Amazon Polly", "Amazon Comprehend", "Amazon Lex"],
+    a: 0,
+    e: "Amazon Transcribe is an automatic speech recognition (ASR) service that converts speech to text." },
+  { d: "Fundamentals of AI/ML", q: "Which AWS service converts text into lifelike speech?",
+    o: ["Amazon Polly", "Amazon Transcribe", "Amazon Lex", "Amazon Rekognition"],
+    a: 0,
+    e: "Amazon Polly turns text into lifelike speech using deep learning (text-to-speech)." },
+  { d: "Fundamentals of AI/ML", q: "Which task is best described as 'unsupervised learning'?",
+    o: ["Customer segmentation using clustering", "Spam email classification", "Predicting house prices", "Image classification"],
+    a: 0,
+    e: "Clustering groups unlabeled data by similarity — a classic unsupervised learning task." },
+  { d: "Fundamentals of AI/ML", q: "In ML, what is the purpose of a 'validation set' during model training?",
+    o: ["To tune hyperparameters and avoid overfitting", "To train the model weights", "To deploy the model", "To label raw data"],
+    a: 0,
+    e: "The validation set is used to tune hyperparameters and detect overfitting during training, distinct from the test set." },
+  { d: "Fundamentals of AI/ML", q: "What is 'overfitting' in machine learning?",
+    o: ["The model performs well on training data but poorly on unseen data", "The model is too simple to capture patterns", "The dataset is too small", "The model uses too little compute"],
+    a: 0,
+    e: "Overfitting happens when a model memorizes the training set — high training accuracy, low generalization to new data." },
+  { d: "Fundamentals of AI/ML", q: "Which metric is most appropriate for evaluating a binary classifier when classes are imbalanced?",
+    o: ["F1 score", "Mean Squared Error", "R-squared", "Root Mean Squared Error"],
+    a: 0,
+    e: "F1 balances precision and recall — preferred over accuracy when classes are imbalanced. MSE/RMSE/R² are regression metrics." },
+  { d: "Fundamentals of AI/ML", q: "A company wants to identify objects, scenes, and faces in images. Which AWS service should they use?",
+    o: ["Amazon Rekognition", "Amazon Textract", "Amazon Lookout for Vision", "Amazon SageMaker"],
+    a: 0,
+    e: "Amazon Rekognition provides pre-trained CV APIs for object/scene/face detection, while Lookout for Vision is for industrial defect detection." },
+  { d: "Fundamentals of AI/ML", q: "Which AWS service extracts structured text, forms, and tables from scanned documents?",
+    o: ["Amazon Textract", "Amazon Comprehend", "Amazon Rekognition", "AWS Glue"],
+    a: 0,
+    e: "Amazon Textract automatically extracts text, handwriting, forms, and tables from scanned documents using ML." },
+  { d: "Fundamentals of AI/ML", q: "Which of the following is an example of 'reinforcement learning'?",
+    o: ["An agent learns to play a game by receiving rewards for winning moves", "A model classifies emails as spam", "A model groups customers by purchase history", "A model translates English to French"],
+    a: 0,
+    e: "Reinforcement learning trains an agent to take actions in an environment to maximize a cumulative reward." },
+  { d: "Fundamentals of AI/ML", q: "A company needs to build a chatbot that understands user intent. Which AWS service specializes in this?",
+    o: ["Amazon Lex", "Amazon Polly", "Amazon Rekognition", "Amazon Forecast"],
+    a: 0,
+    e: "Amazon Lex is the service for building conversational interfaces (chatbots) using voice and text — the technology behind Alexa." },
+  { d: "Fundamentals of AI/ML", q: "In supervised learning, what does the term 'feature' refer to?",
+    o: ["An input variable used to make a prediction", "The label being predicted", "The model's accuracy", "A type of neural network"],
+    a: 0,
+    e: "A feature is an input variable (column) used by the model. The 'label' is the target/output." },
+  { d: "Fundamentals of AI/ML", q: "Which AWS offering allows building ML models visually with no code?",
+    o: ["Amazon SageMaker Canvas", "Amazon SageMaker Studio", "AWS Lambda", "Amazon Comprehend"],
+    a: 0,
+    e: "SageMaker Canvas provides a visual, no-code interface for building ML models and generating predictions." },
+  { d: "Fundamentals of AI/ML", q: "Which AWS service is used to detect anomalies in industrial equipment using sensor data?",
+    o: ["Amazon Lookout for Equipment", "Amazon Forecast", "Amazon Rekognition", "Amazon Comprehend Medical"],
+    a: 0,
+    e: "Lookout for Equipment uses ML to detect abnormal behavior in industrial machine sensor data." },
+  { d: "Fundamentals of AI/ML", q: "Which AWS service helps identify unusual financial transactions and potential fraud?",
+    o: ["Amazon Fraud Detector", "Amazon Comprehend", "Amazon Rekognition", "AWS DeepLens"],
+    a: 0,
+    e: "Amazon Fraud Detector is purpose-built for identifying potentially fraudulent activities like online payment fraud and identity fraud." },
+  { d: "Fundamentals of AI/ML", q: "What is a 'neural network' loosely inspired by?",
+    o: ["The human brain", "A spreadsheet", "A relational database", "A traditional computer program"],
+    a: 0,
+    e: "Neural networks are loosely inspired by biological neurons in the brain, organized in layers of interconnected nodes." },
+  { d: "Generative AI", q: "Which AWS service provides access to foundation models from multiple providers via a single API?",
+    o: ["Amazon Bedrock", "Amazon SageMaker JumpStart", "AWS DeepRacer", "Amazon Q"],
+    a: 0,
+    e: "Amazon Bedrock is a fully managed service that provides access to FMs from AI21, Anthropic, Cohere, Meta, Mistral, Stability AI, and Amazon via a single API." },
+  { d: "Generative AI", q: "What is a 'large language model' (LLM)?",
+    o: ["A foundation model trained on massive text corpora to understand and generate language", "A database for storing chat logs", "A small rule-based chatbot", "A hardware accelerator"],
+    a: 0,
+    e: "LLMs are foundation models with billions of parameters trained on huge text datasets, capable of generating and understanding natural language." },
+  { d: "Generative AI", q: "What is 'temperature' in the context of generative AI text generation?",
+    o: ["A parameter that controls the randomness/creativity of output", "The model's training data size", "The number of layers in the model", "The model's licensing cost"],
+    a: 0,
+    e: "Temperature controls randomness: 0 = deterministic/focused, 1 = balanced, higher = more creative/random outputs." },
+  { d: "Generative AI", q: "What does 'top_p' (nucleus sampling) control?",
+    o: ["The cumulative probability mass from which tokens are sampled", "The number of tokens generated", "The model's max context length", "The training data size"],
+    a: 0,
+    e: "Top-p selects from the smallest set of tokens whose cumulative probability exceeds p, controlling output diversity." },
+  { d: "Generative AI", q: "Which parameter primarily controls the maximum length of a model's response?",
+    o: ["max_tokens", "temperature", "top_p", "stop_sequences"],
+    a: 0,
+    e: "max_tokens limits the maximum number of tokens the model can generate in a single response." },
+  { d: "Generative AI", q: "What is a 'foundation model'?",
+    o: ["A large model pre-trained on broad data, adaptable to many downstream tasks", "A model trained for a single specific task", "A hardware device for AI", "A database schema"],
+    a: 0,
+    e: "Foundation models are large models trained on broad datasets at scale, then adapted (via fine-tuning, prompting) to many downstream tasks." },
+  { d: "Generative AI", q: "Which AWS service is the generative-AI-powered assistant for software development, similar to a coding copilot?",
+    o: ["Amazon Q Developer", "Amazon Comprehend", "AWS CodeBuild", "Amazon Bedrock"],
+    a: 0,
+    e: "Amazon Q Developer is AWS's generative AI coding assistant (formerly CodeWhisperer)." },
+  { d: "Generative AI", q: "What is 'prompt engineering'?",
+    o: ["The practice of designing and refining inputs to guide a foundation model's output", "Building a model from scratch", "Selecting hardware for training", "Encrypting prompts for security"],
+    a: 0,
+    e: "Prompt engineering is the iterative process of crafting inputs (instructions, examples, context) to get desired model outputs." },
+  { d: "Generative AI", q: "Which technique provides the model with a few example input/output pairs inside the prompt to guide its behavior?",
+    o: ["Few-shot prompting", "Zero-shot prompting", "Chain-of-thought", "Pre-training"],
+    a: 0,
+    e: "Few-shot prompting includes example input/output pairs in the prompt; zero-shot includes no examples." },
+  { d: "Generative AI", q: "What is 'fine-tuning' a foundation model?",
+    o: ["Further training the model on a smaller, task-specific dataset to specialize it", "Compressing the model to fewer parameters", "Encrypting model weights", "Prompting the model with examples"],
+    a: 0,
+    e: "Fine-tuning continues training of a pre-trained model on a smaller, task-specific dataset to specialize it for a use case." },
+  { d: "Generative AI", q: "Which AWS service is a generative-AI-powered business assistant that can answer questions, summarize, and complete tasks using enterprise data?",
+    o: ["Amazon Q (Business)", "Amazon Lex", "Amazon SageMaker", "Amazon Forecast"],
+    a: 0,
+    e: "Amazon Q (Business) is a generative AI assistant that can be connected to enterprise data sources and integrated with workplace tools." },
+  { d: "Generative AI", q: "What is 'retrieval-augmented generation' (RAG)?",
+    o: ["A pattern where the model retrieves external documents to ground its answers", "A model training technique", "A hardware acceleration method", "An image generation algorithm"],
+    a: 0,
+    e: "RAG retrieves relevant context from a knowledge base (e.g. via vector search) and includes it in the prompt to ground the model's responses." },
+  { d: "Generative AI", q: "What is a 'vector embedding'?",
+    o: ["A numerical representation of data (text/image) capturing semantic meaning", "An encryption key", "A token in a prompt", "A loss function value"],
+    a: 0,
+    e: "Embeddings are dense numerical vectors that represent data such that semantically similar items are close in vector space." },
+  { d: "Generative AI", q: "Which AWS service is purpose-built for vector similarity search at scale?",
+    o: ["Amazon OpenSearch Service (with k-NN)", "Amazon Aurora", "Amazon Redshift", "Amazon EMR"],
+    a: 0,
+    e: "OpenSearch Service (with k-NN plugin) and Amazon Aurora (pgvector) and MemoryDB for Redis support vector similarity search." },
+  { d: "Generative AI", q: "What is a 'token' in the context of LLMs?",
+    o: ["A chunk of text (word/sub-word) that the model processes", "A digital currency", "A GPU memory unit", "An API key"],
+    a: 0,
+    e: "Models break text into tokens (often sub-words) and process them. Token counts drive cost and context length." },
+  { d: "Generative AI", q: "What does the 'context window' of a model refer to?",
+    o: ["The maximum number of tokens the model can process in a single request", "The number of GPUs used to train it", "The model's licensing window", "The size of its weights on disk"],
+    a: 0,
+    e: "The context window (in tokens) is the maximum input + output length the model can handle in one call." },
+  { d: "Generative AI", q: "Which of the following is a foundation model family provided in Amazon Bedrock by Anthropic?",
+    o: ["Claude", "Llama", "Nova", "Jurassic"],
+    a: 0,
+    e: "Anthropic's Claude is one of the FM families available on Bedrock. Llama is from Meta, Nova from Amazon, Jurassic from AI21." },
+  { d: "Generative AI", q: "Which Amazon Bedrock feature enables private customization of foundation models using your own data, without sharing it for general training?",
+    o: ["Fine-tuning / Continued Pre-training", "Public sharing", "Open-source release", "Auto-training"],
+    a: 0,
+    e: "Bedrock supports fine-tuning and continued pre-training so customers can adapt FMs using their own data privately." },
+  { d: "Generative AI", q: "What is 'inference' in the context of a deployed model?",
+    o: ["The process of running a trained model to produce predictions/outputs", "Training a new model", "Saving a model to disk", "Encrypting model weights"],
+    a: 0,
+    e: "Inference is using a trained model to generate predictions on new data, as opposed to training." },
+  { d: "Generative AI", q: "Which AWS feature lets you use a foundation model without managing any infrastructure?",
+    o: ["On-demand inference in Amazon Bedrock", "EC2 instances", "AWS Lambda functions", "S3 buckets"],
+    a: 0,
+    e: "Bedrock offers on-demand inference — call FMs via API with no infrastructure to manage. Provisioned Throughput is for committed capacity." },
+  { d: "Generative AI", q: "What is a 'hallucination' in generative AI?",
+    o: ["When the model produces confident but factually incorrect or fabricated information", "When the model refuses to answer", "When training crashes", "When the API returns 5xx"],
+    a: 0,
+    e: "Hallucination is when an LLM generates plausible-sounding but incorrect/fabricated content." },
+  { d: "Generative AI", q: "What is 'token sampling' strategy that picks the most likely next token called?",
+    o: ["Greedy decoding", "Beam search is similar, but greedy is single-path", "Random sampling", "Top-k"],
+    a: 0,
+    e: "Greedy decoding always picks the highest-probability token. Beam search explores multiple paths." },
+  { d: "Generative AI", q: "Which technique makes model weights more efficient by representing them in lower precision (e.g. 4-bit)?",
+    o: ["Quantization", "Pre-training", "Tokenization", "Hyperparameter tuning"],
+    a: 0,
+    e: "Quantization reduces model memory and speeds up inference by using lower-precision weights (e.g. INT8, INT4)." },
+  { d: "Generative AI", q: "Which AWS service lets you generate images from text prompts using foundation models?",
+    o: ["Amazon Bedrock (Stability AI / Titan Image Generator)", "Amazon Rekognition", "Amazon Polly", "Amazon Textract"],
+    a: 0,
+    e: "Bedrock hosts Stability AI's Stable Diffusion and Amazon Titan Image Generator for text-to-image generation." },
+  { d: "Applications of FMs", q: "A company wants to summarize long legal documents using a foundation model. Which is the most appropriate AWS capability?",
+    o: ["Amazon Bedrock with a text-generation FM and a summarization prompt", "Amazon Forecast", "Amazon Rekognition", "Amazon Polly"],
+    a: 0,
+    e: "Summarization is a classic text-generation use case for FMs; Bedrock exposes models that excel at it." },
+  { d: "Applications of FMs", q: "Which Amazon Bedrock feature helps reduce hallucinations by grounding model responses in company data?",
+    o: ["Knowledge Bases for Amazon Bedrock (RAG)", "Provisioned Throughput", "Model evaluation", "Custom model import"],
+    a: 0,
+    e: "Knowledge Bases for Amazon Bedrock fully manages the RAG pipeline — chunking, embeddings, retrieval, and prompt grounding." },
+  { d: "Applications of FMs", q: "Which Bedrock feature lets you build agents that can call company APIs and take multi-step actions?",
+    o: ["Amazon Bedrock Agents", "Amazon SageMaker Pipelines", "AWS Step Functions only", "Amazon Comprehend"],
+    a: 0,
+    e: "Bedrock Agents orchestrate FMs with company systems/APIs and can break tasks into multi-step plans." },
+  { d: "Applications of FMs", q: "Which AWS service is a business chat assistant that can answer questions grounded in your company's content?",
+    o: ["Amazon Q Business", "Amazon Lex", "Amazon Forecast", "AWS Chatbot"],
+    a: 0,
+    e: "Amazon Q Business is AWS's enterprise assistant, configurable with your data sources, identity, and web indexes." },
+  { d: "Applications of FMs", q: "Which pattern uses similarity search over vector embeddings to find relevant documents for a query?",
+    o: ["Semantic search", "Keyword search only", "Hash-based search", "Lexical search only"],
+    a: 0,
+    e: "Semantic search embeds queries and documents into the same vector space, then retrieves nearest neighbors." },
+  { d: "Applications of FMs", q: "A retailer wants to translate product descriptions into 10 languages automatically. Which AWS capability is best?",
+    o: ["Amazon Translate, integrated into a Bedrock pipeline if needed", "Amazon Polly", "Amazon Rekognition", "Amazon Forecast"],
+    a: 0,
+    e: "Amazon Translate is purpose-built for scalable text translation. Bedrock can also be used for translation via FMs." },
+  { d: "Applications of FMs", q: "Which AWS service provides a managed workflow to build, test, and deploy RAG-based generative AI applications?",
+    o: ["Amazon Bedrock + Knowledge Bases + OpenSearch", "AWS Glue DataBrew", "Amazon EMR", "Amazon Rekognition"],
+    a: 0,
+    e: "Bedrock with Knowledge Bases (backed by OpenSearch/Aurora/etc.) is the managed RAG stack on AWS." },
+  { d: "Applications of FMs", q: "A call center wants an AI assistant that listens to calls in real time and suggests responses. Which is the best fit?",
+    o: ["Amazon Transcribe + Bedrock LLM in a streaming pipeline", "Amazon Rekognition", "Amazon Forecast", "AWS DeepRacer"],
+    a: 0,
+    e: "Stream Transcribe → Bedrock LLM is the standard pattern for real-time agent-assist use cases." },
+  { d: "Applications of FMs", q: "Which Amazon Bedrock capability automatically evaluates and compares model outputs (e.g. for quality, harmfulness)?",
+    o: ["Model Evaluation on Bedrock", "Provisioned Throughput", "Custom Model Import", "Agents only"],
+    a: 0,
+    e: "Bedrock's Model Evaluation feature supports automatic + human-in-the-loop evaluations of FMs." },
+  { d: "Applications of FMs", q: "What is the best use of 'chain-of-thought' prompting?",
+    o: ["Asking the model to reason step-by-step before giving the final answer", "Reducing the prompt to one word", "Hiding context from the model", "Encrypting inputs"],
+    a: 0,
+    e: "Chain-of-thought encourages the model to produce intermediate reasoning steps, improving performance on complex tasks." },
+  { d: "Applications of FMs", q: "A developer wants to embed their own custom model into Bedrock. Which feature is required?",
+    o: ["Custom Model Import (CMI)", "Provisioned Throughput only", "Knowledge Bases", "Agents for Bedrock"],
+    a: 0,
+    e: "Custom Model Import allows customers to bring their own foundation model weights and serve them through Bedrock." },
+  { d: "Applications of FMs", q: "Which embedding model is provided natively by Amazon Bedrock (Amazon Titan)?",
+    o: ["Titan Text Embeddings / Titan Multimodal Embeddings", "GPT-4", "Stable Diffusion", "Whisper"],
+    a: 0,
+    e: "Amazon Titan Embeddings is a native Bedrock FM family for converting text (and images) into vector embeddings." },
+  { d: "Applications of FMs", q: "Which AWS service can convert text to life-like speech in many languages, suitable for voice-enabled assistants?",
+    o: ["Amazon Polly", "Amazon Comprehend", "Amazon Forecast", "Amazon Rekognition"],
+    a: 0,
+    e: "Amazon Polly is the managed text-to-speech service. Neural voices sound natural and support many languages." },
+  { d: "Applications of FMs", q: "Which is the best use of a foundation model for a marketing team?",
+    o: ["Generating draft ad copy and image prompts that marketers then refine", "Predicting stock prices directly", "Running databases", "Replacing all human review"],
+    a: 0,
+    e: "FMs are great for creative drafts (copy, taglines, image prompts) but humans should still review/refine for brand and accuracy." },
+  { d: "Applications of FMs", q: "Which AWS offering is best for a team that wants to experiment with multiple FMs quickly without managing infrastructure?",
+    o: ["Amazon Bedrock playground", "EC2 + custom code", "AWS Batch", "AWS Lambda + custom container"],
+    a: 0,
+    e: "The Bedrock playground lets you compare multiple FMs interactively in the AWS console with no setup." },
+  { d: "Applications of FMs", q: "Which Bedrock feature gives you a private, dedicated FM endpoint with predictable latency for production workloads?",
+    o: ["Provisioned Throughput", "On-demand inference", "Custom Model Import", "Model evaluation"],
+    a: 0,
+    e: "Provisioned Throughput gives you reserved model capacity with consistent latency, useful for production." },
+  { d: "Applications of FMs", q: "A team wants to summarize customer support tickets. Which approach is most appropriate?",
+    o: ["Call a Bedrock text-generation FM with a summarization prompt", "Use Amazon Rekognition", "Use Amazon Forecast", "Use Amazon Polly"],
+    a: 0,
+    e: "Summarization is a text-generation task; Bedrock FMs handle it well via a well-crafted prompt." },
+  { d: "Applications of FMs", q: "Which AWS service provides code suggestions and security scans inside IDEs?",
+    o: ["Amazon Q Developer", "Amazon Lex", "Amazon Forecast", "AWS CodeDeploy"],
+    a: 0,
+    e: "Amazon Q Developer (formerly CodeWhisperer) provides AI-powered code suggestions, security scans, and a chat assistant." },
+  { d: "Applications of FMs", q: "Which option best describes a 'chat-based application' built on Bedrock?",
+    o: ["An application that sends conversational turns (messages) to an FM and renders the streamed response", "A static web page", "A database query", "A spreadsheet"],
+    a: 0,
+    e: "Bedrock's Converse API provides a unified interface for multi-turn chat with tool use and streaming." },
+  { d: "Responsible AI", q: "Which of the following is a core dimension of AWS's responsible AI guidance?",
+    o: ["Fairness, Explainability, Privacy & Security, Safety, Controllability, Veracity, Governance", "Speed, Cost, Region, SKU", "Color, Theme, Logo, Font", "CPU, RAM, Disk, Network"],
+    a: 0,
+    e: "AWS's responsible AI pillars include Fairness, Explainability, Privacy & Security, Safety, Controllability, Veracity, and Governance." },
+  { d: "Responsible AI", q: "What is 'bias' in the context of AI?",
+    o: ["Systematic errors that produce unfair outcomes for certain groups", "Random noise in data", "Encryption failures", "Slow training time"],
+    a: 0,
+    e: "Bias in AI refers to systematic errors or unfair outcomes caused by skewed data, model design, or deployment context." },
+  { d: "Responsible AI", q: "Which Amazon SageMaker capability helps detect bias in datasets and models?",
+    o: ["SageMaker Clarify", "SageMaker Studio", "SageMaker Pipelines", "SageMaker Ground Truth only"],
+    a: 0,
+    e: "SageMaker Clarify detects bias across the ML lifecycle and explains model predictions." },
+  { d: "Responsible AI", q: "What does 'explainability' mean for an ML model?",
+    o: ["The ability to understand why a model made a particular prediction", "The model's training time", "The model's file size", "The number of parameters"],
+    a: 0,
+    e: "Explainability = being able to articulate the reasons behind a model's predictions (e.g. via feature attributions)." },
+  { d: "Responsible AI", q: "Which technique helps explain individual model predictions by showing which features contributed?",
+    o: ["SHAP (SHapley Additive exPlanations)", "K-means", "PCA", "Gradient descent"],
+    a: 0,
+    e: "SHAP and LIME are common feature-attribution methods. SageMaker Clarify supports SHAP natively." },
+  { d: "Responsible AI", q: "Which AWS service includes built-in content safety guardrails for generative AI applications?",
+    o: ["Amazon Bedrock Guardrails", "AWS WAF", "Amazon Polly", "Amazon Comprehend"],
+    a: 0,
+    e: "Bedrock Guardrails let customers apply content filters, denied topics, and sensitive information filters to FMs." },
+  { d: "Responsible AI", q: "What is a 'toxicity filter' in generative AI?",
+    o: ["A filter that blocks hateful, harassing, or unsafe content in inputs and outputs", "A spam filter for email", "A network firewall", "A GPU temperature monitor"],
+    a: 0,
+    e: "Toxicity filters (e.g. in Bedrock Guardrails) detect and block harmful content in prompts and model outputs." },
+  { d: "Responsible AI", q: "What is PII in AI/ML contexts?",
+    o: ["Personally Identifiable Information", "Public Internet Identifier", "Pre-trained Inference Index", "Privacy-Internal Identifier"],
+    a: 0,
+    e: "PII = Personally Identifiable Information. Responsible AI systems should detect and protect PII." },
+  { d: "Responsible AI", q: "Which AWS service can detect and redact PII in text?",
+    o: ["Amazon Comprehend (PII detection)", "Amazon Polly", "Amazon Forecast", "Amazon Rekognition"],
+    a: 0,
+    e: "Amazon Comprehend has a built-in PII detection and redaction API." },
+  { d: "Responsible AI", q: "Which AWS service detects toxicity and labels unsafe content in text?",
+    o: ["Amazon Comprehend Moderation Labels", "Amazon Forecast", "Amazon Polly", "AWS DeepLens"],
+    a: 0,
+    e: "Comprehend's Moderation Labels API classifies unsafe content (hate, sexual, violence, etc.)." },
+  { d: "Responsible AI", q: "What is 'data governance' in the context of AI/ML?",
+    o: ["Policies and processes that ensure data quality, lineage, privacy, and compliance", "GPU allocation policy", "Choosing an AWS region", "Setting IAM password rules only"],
+    a: 0,
+    e: "Data governance covers data quality, lineage, access control, privacy, and regulatory compliance throughout the AI lifecycle." },
+  { d: "Responsible AI", q: "Which AWS service provides a centralized place to manage data governance and access?",
+    o: ["AWS Lake Formation + IAM + AWS Glue Data Catalog", "Amazon Polly", "AWS DeepRacer", "Amazon Rekognition"],
+    a: 0,
+    e: "Lake Formation, IAM, and the Glue Data Catalog together provide centralized data access control and governance." },
+  { d: "Responsible AI", q: "What is the AWS Shared Responsibility Model for AI services?",
+    o: ["AWS is responsible for security 'of' the cloud (infrastructure); customers are responsible for security 'in' the cloud (data, prompts, access)", "AWS is fully responsible for everything", "Customers are fully responsible for everything", "It only applies to EC2"],
+    a: 0,
+    e: "AWS secures the underlying cloud; customers secure what they put in it — including data, prompts, model access, and configuration." },
+  { d: "Responsible AI", q: "What is a 'human-in-the-loop' (HITL) pattern in AI?",
+    o: ["Keeping a human reviewer in the workflow to validate or override AI outputs", "Removing humans from AI systems", "Replacing humans with bots entirely", "Running AI in a sandbox"],
+    a: 0,
+    e: "HITL embeds human review into AI workflows for higher-stakes or lower-confidence decisions, improving safety and trust." },
+  { d: "Responsible AI", q: "Which AWS capability supports human review workflows for generative AI outputs?",
+    o: ["Amazon Augmented AI (A2I)", "Amazon Polly", "Amazon Forecast", "AWS DeepRacer"],
+    a: 0,
+    e: "Amazon A2I makes it easy to build human review workflows for ML predictions and FM outputs." },
+  { d: "Responsible AI", q: "Why is data lineage important for responsible AI?",
+    o: ["It tracks where data came from and how it was transformed, supporting auditability and trust", "It makes the model run faster", "It reduces cost", "It changes the model's behavior"],
+    a: 0,
+    e: "Data lineage provides traceability of data from origin to model output, which is critical for audit, debugging, and compliance." },
+  { d: "Responsible AI", q: "What is 'model monitoring' for responsible AI?",
+    o: ["Continuously observing deployed model behavior for drift, bias, and quality issues", "Watching the model train in real time", "Increasing model size", "Encrypting model weights"],
+    a: 0,
+    e: "Model monitoring tracks things like data drift, prediction quality, bias, and security in production to catch issues early." },
+  { d: "Responsible AI", q: "Which SageMaker capability helps monitor models for drift and bias in production?",
+    o: ["SageMaker Model Monitor + SageMaker Clarify", "SageMaker Studio only", "SageMaker JumpStart", "SageMaker Pipelines only"],
+    a: 0,
+    e: "SageMaker Model Monitor detects drift and quality issues; Clarify can monitor for bias over time." },
+  { d: "Responsible AI", q: "Which of these is a key practice for responsible generative AI?",
+    o: ["Clear disclosure when users are interacting with AI-generated content", "Pretending the AI is human", "Removing safety filters for speed", "Hiding model limitations"],
+    a: 0,
+    e: "Transparency (disclosure that content is AI-generated) is a core responsible AI practice." },
+  { d: "Responsible AI", q: "Which AWS principle focuses on giving users the ability to inspect, correct, or opt out of AI-driven decisions?",
+    o: ["Controllability", "Cost optimization", "Region selection", "GPU sizing"],
+    a: 0,
+    e: "Controllability means humans retain meaningful oversight and the ability to correct or override AI behavior." },
+  { d: "Security & Governance", q: "Which AWS service is the primary way to control access to AWS AI services via users, groups, and roles?",
+    o: ["AWS Identity and Access Management (IAM)", "Amazon Cognito", "AWS Shield", "AWS WAF"],
+    a: 0,
+    e: "IAM is the foundation for controlling access to AWS AI service APIs and resources." },
+  { d: "Security & Governance", q: "Which AWS service is used to encrypt data at rest in S3 and other services?",
+    o: ["AWS Key Management Service (KMS)", "Amazon Cognito", "AWS Firewall Manager", "Amazon GuardDuty"],
+    a: 0,
+    e: "AWS KMS manages encryption keys used to encrypt data at rest across many AWS services, including S3 and Bedrock." },
+  { d: "Security & Governance", q: "What is the best way to keep prompts and completions private when using a foundation model on Bedrock?",
+    o: ["Use IAM to restrict access and ensure data is not used to train base models by default", "Share credentials publicly", "Disable encryption", "Store logs in public S3"],
+    a: 0,
+    e: "On Bedrock, customer data is not used to train the underlying FMs; use IAM, KMS, and VPC controls to keep it private." },
+  { d: "Security & Governance", q: "Which Bedrock feature blocks harmful or sensitive content from being sent to or returned by an FM?",
+    o: ["Bedrock Guardrails", "Bedrock Agents", "Custom Model Import", "Provisioned Throughput"],
+    a: 0,
+    e: "Guardrails apply denied topics, content filters, sensitive information filters, and word filters to FMs." },
+  { d: "Security & Governance", q: "Which service provides a single dashboard to assess the compliance posture of your AWS accounts?",
+    o: ["AWS Security Hub", "Amazon Polly", "Amazon Forecast", "AWS DeepRacer"],
+    a: 0,
+    e: "Security Hub aggregates security findings from multiple AWS services and checks against compliance standards." },
+  { d: "Security & Governance", q: "Which service logs API activity for audit and compliance in your AWS account?",
+    o: ["AWS CloudTrail", "Amazon Comprehend", "Amazon Rekognition", "Amazon Forecast"],
+    a: 0,
+    e: "CloudTrail records API calls made in your account, providing event history for security and compliance." },
+  { d: "Security & Governance", q: "Which service can mask PII in logs and streams before they reach your AI pipeline?",
+    o: ["Amazon Macie (for S3) and Comprehend PII detection", "Amazon Polly", "AWS DeepLens", "Amazon Forecast"],
+    a: 0,
+    e: "Macie discovers PII in S3, and Comprehend detects/redacts PII in text. Both help protect sensitive data." },
+  { d: "Security & Governance", q: "Which network feature lets you privately connect to Bedrock without traversing the public internet?",
+    o: ["AWS PrivateLink (VPC interface endpoints)", "Internet Gateway", "NAT Gateway", "AWS Direct Connect only"],
+    a: 0,
+    e: "Bedrock supports VPC interface endpoints via PrivateLink, so traffic stays on the AWS network." },
+  { d: "Security & Governance", q: "Which AWS service helps you classify and protect sensitive data (e.g. PII) in S3?",
+    o: ["Amazon Macie", "AWS WAF", "AWS Shield", "Amazon Polly"],
+    a: 0,
+    e: "Amazon Macie uses ML to discover, classify, and protect sensitive data such as PII in S3." },
+  { d: "Security & Governance", q: "Which authentication mechanism is recommended for end-user access to AI apps in browsers and mobile?",
+    o: ["Amazon Cognito", "IAM user long-term keys", "Public bucket policies", "Hard-coded credentials"],
+    a: 0,
+    e: "Amazon Cognito provides secure identity federation (OIDC/SAML) and short-lived credentials for end users." },
+  { d: "Security & Governance", q: "Which is a best practice for least-privilege access to AI services?",
+    o: ["Grant only the specific API actions and resources a user/role needs", "Give AdministratorAccess to everyone", "Use root credentials for apps", "Share access keys in code"],
+    a: 0,
+    e: "Least privilege means granting only the permissions required, scoped to specific actions and resources." },
+  { d: "Security & Governance", q: "What is a 'data residency' consideration for AI workloads?",
+    o: ["Ensuring data is stored and processed in the geographic region required by regulation", "Choosing any random region", "Storing data only on edge devices", "Using the largest GPU available"],
+    a: 0,
+    e: "Data residency is about keeping data within specific geographic/legal boundaries (e.g. EU only)." },
+  { d: "Security & Governance", q: "Which AWS service provides central management of encryption keys with FIPS 140-2 validated HSMs?",
+    o: ["AWS KMS / AWS CloudHSM", "Amazon Polly", "Amazon Forecast", "AWS DeepRacer"],
+    a: 0,
+    e: "AWS KMS (with optional CloudHSM) provides key management using FIPS 140-2 validated hardware." },
+  { d: "Security & Governance", q: "Which service allows you to define and enforce multi-account governance baselines?",
+    o: ["AWS Control Tower + AWS Organizations + SCPs", "Amazon Polly", "Amazon Forecast", "AWS DeepRacer"],
+    a: 0,
+    e: "Control Tower with Organizations and Service Control Policies (SCPs) enforces governance across accounts." },
+  { d: "Security & Governance", q: "Which Bedrock feature lets you bring your own custom model weights while keeping them in your AWS account boundary?",
+    o: ["Custom Model Import", "Provisioned Throughput only", "Knowledge Bases", "Agents only"],
+    a: 0,
+    e: "Custom Model Import allows you to import weights and serve them via Bedrock inside your AWS account boundary." },
+  { d: "Security & Governance", q: "What does 'opt-out' of model training mean on Bedrock?",
+    o: ["Ensuring your inputs/outputs are not used to train AWS's base foundation models", "Disabling the model", "Deleting logs", "Encrypting the model"],
+    a: 0,
+    e: "By default on Bedrock, customer data is not used to train or improve AWS FMs, supporting privacy and IP protection." },
+  { d: "Security & Governance", q: "Which service helps you detect anomalous API activity, including unusual Bedrock invocations?",
+    o: ["Amazon GuardDuty", "Amazon Polly", "Amazon Forecast", "AWS DeepRacer"],
+    a: 0,
+    e: "GuardDuty analyzes CloudTrail, VPC Flow Logs, and DNS logs to detect threats and anomalous behavior." },
+  { d: "Security & Governance", q: "What is the purpose of VPC endpoint policies for Bedrock?",
+    o: ["To control which Bedrock APIs can be invoked from inside a VPC", "To create new FMs", "To fine-tune models", "To host static websites"],
+    a: 0,
+    e: "VPC endpoint policies restrict which Bedrock actions are callable via a PrivateLink endpoint, enforcing least privilege." },
+  { d: "Security & Governance", q: "Which AWS compliance program is most relevant when handling healthcare data in AI pipelines?",
+    o: ["HIPAA Eligibility (with a BAA)", "PCI DSS only", "FedRAMP only", "SOC 2 only"],
+    a: 0,
+    e: "HIPAA: AWS services can be used to process PHI under a BAA with AWS. The customer remains a HIPAA-covered entity." },
+  { d: "Security & Governance", q: "What is 'prompt injection'?",
+    o: ["An attack where untrusted input manipulates a model into ignoring its instructions", "Encrypting prompts for transit", "Reducing prompt length", "Caching prompts"],
+    a: 0,
+    e: "Prompt injection is a security risk where adversarial input causes the model to deviate from its intended behavior." },
+  { d: "Security & Governance", q: "Which mitigation helps reduce prompt injection risk in a Bedrock-based application?",
+    o: ["Validate and separate untrusted input from system instructions, use Guardrails, and apply least privilege", "Concatenate user input directly into system prompts", "Disable Guardrails", "Log all output to public S3"],
+    a: 0,
+    e: "Defense in depth: input validation, separation of trusted system prompts from untrusted user content, Guardrails, and least-privilege access." },
+  { d: "Security & Governance", q: "Which AWS service centrally stores and analyzes logs from multiple services (CloudTrail, VPC, etc.)?",
+    o: ["Amazon CloudWatch Logs", "Amazon Polly", "Amazon Forecast", "AWS DeepRacer"],
+    a: 0,
+    e: "CloudWatch Logs centralizes log collection and analysis across AWS services." },
+  { d: "Security & Governance", q: "Which capability allows an organization to track and audit who invoked which Bedrock model and when?",
+    o: ["AWS CloudTrail events for bedrock:* APIs", "Amazon Polly only", "AWS DeepRacer", "Amazon Forecast"],
+    a: 0,
+    e: "CloudTrail records API calls to Bedrock, including model ID, time, and caller, supporting audit and governance." },
+  { d: "Security & Governance", q: "Which AWS service is best for storing and rotating API keys/credentials for AI services?",
+    o: ["AWS Secrets Manager or AWS Systems Manager Parameter Store", "Public GitHub", "Hard-coded in code", "Plaintext S3 bucket"],
+    a: 0,
+    e: "Secrets Manager and Parameter Store provide secure storage, rotation, and fine-grained access to secrets." },
+  { d: "Mixed", q: "A retail company wants personalized product recommendations on its website. Which AWS service is most appropriate?",
+    o: ["Amazon Personalize", "Amazon Forecast", "Amazon Lex", "AWS DeepRacer"],
+    a: 0,
+    e: "Amazon Personalize allows you to build real-time personalized recommendations using the same ML technology used at Amazon.com." },
+  { d: "Mixed", q: "Which service helps automate document processing by extracting text, forms, and tables from scanned PDFs?",
+    o: ["Amazon Textract", "Amazon Polly", "Amazon Forecast", "Amazon Rekognition"],
+    a: 0,
+    e: "Amazon Textract is purpose-built for extracting structured data from scanned documents and PDFs." },
+  { d: "Mixed", q: "Which AWS service is best for converting customer call recordings into searchable text for analytics?",
+    o: ["Amazon Transcribe", "Amazon Polly", "Amazon Rekognition", "Amazon Forecast"],
+    a: 0,
+    e: "Amazon Transcribe converts speech to text, often paired with Comprehend for downstream NLP." },
+  { d: "Mixed", q: "Which AWS service lets you train reinforcement learning models with a 1/18th-scale autonomous vehicle?",
+    o: ["AWS DeepRacer", "Amazon Forecast", "Amazon Rekognition", "Amazon Polly"],
+    a: 0,
+    e: "AWS DeepRacer is a fun way to learn RL with a physical or simulated autonomous car." },
+  { d: "Mixed", q: "Which AWS offering is most appropriate for assembling a quick custom ML model from your tabular business data with no code?",
+    o: ["Amazon SageMaker Canvas", "AWS Lambda", "Amazon Polly", "AWS DeepRacer"],
+    a: 0,
+    e: "SageMaker Canvas is AWS's no-code ML builder for business analysts, with auto-modeling for tabular data." },
+  { d: "Mixed", q: "Which AWS capability lets you build a custom chatbot integrated with your contact center?",
+    o: ["Amazon Connect + Amazon Lex", "Amazon Forecast + Polly", "Amazon Rekognition + Textract", "AWS DeepRacer + Lambda"],
+    a: 0,
+    e: "Amazon Connect (AWS's contact center) integrates natively with Amazon Lex for conversational IVR/chatbots." },
+  { d: "Mixed", q: "Which AWS service is best suited for analyzing millions of documents for legal discovery (NLP at scale)?",
+    o: ["Amazon Comprehend", "Amazon Polly", "Amazon Forecast", "AWS DeepRacer"],
+    a: 0,
+    e: "Amazon Comprehend is a managed NLP service for entity extraction, sentiment, topic modeling, and PII redaction at scale." },
+  { d: "Mixed", q: "Which AWS capability lets you build, train, and deploy ML models using a low-code visual interface?",
+    o: ["Amazon SageMaker Canvas", "Amazon Polly", "Amazon Forecast", "AWS DeepRacer"],
+    a: 0,
+    e: "SageMaker Canvas is the no-code/low-code visual interface for ML." },
+  { d: "Mixed", q: "Which AWS service offers a fully managed vector database for high-performance similarity search?",
+    o: ["Amazon OpenSearch Service (with vector engine) and MemoryDB for Redis (vector)", "Amazon Aurora Serverless", "Amazon Redshift Spectrum", "AWS Glue"],
+    a: 0,
+    e: "OpenSearch vector engine and MemoryDB for Redis both provide managed vector search for RAG/GenAI use cases." },
+  { d: "Mixed", q: "Which is the best service for a real-time recommendation engine that updates based on user behavior?",
+    o: ["Amazon Personalize", "Amazon Forecast", "Amazon Rekognition", "Amazon Polly"],
+    a: 0,
+    e: "Amazon Personalize supports real-time personalized recommendations informed by user events." },
+  { d: "Mixed", q: "Which AWS tool is designed to help non-engineers explore ML on their data with automated model building?",
+    o: ["Amazon SageMaker Canvas (AutoML)", "Amazon Polly", "Amazon Forecast", "AWS DeepRacer"],
+    a: 0,
+    e: "SageMaker Canvas includes AutoML capabilities for non-engineers." },
+  { d: "Mixed", q: "A team wants to translate documents while preserving formatting. Which AWS service supports this?",
+    o: ["Amazon Translate", "Amazon Comprehend", "Amazon Polly", "Amazon Forecast"],
+    a: 0,
+    e: "Amazon Translate is the managed translation service; document translation can preserve layout for supported formats." },
+  { d: "Mixed", q: "Which AWS offering provides pre-built, open-source foundation models you can deploy yourself on SageMaker?",
+    o: ["SageMaker JumpStart", "Amazon Polly", "Amazon Forecast", "AWS DeepRacer"],
+    a: 0,
+    e: "SageMaker JumpStart provides pre-trained FMs and ML models you can deploy with a few clicks." },
+  { d: "Mixed", q: "Which AWS capability is best for creating a 'customer support assistant' grounded in your product documentation?",
+    o: ["Amazon Bedrock + Knowledge Bases (RAG)", "Amazon Forecast", "Amazon Polly", "Amazon Rekognition"],
+    a: 0,
+    e: "Bedrock + Knowledge Bases = RAG over your docs — the standard pattern for grounded Q&A assistants." },
+  { d: "Mixed", q: "Which AWS service is designed for industrial visual quality inspection (defects, anomalies)?",
+    o: ["Amazon Lookout for Vision", "Amazon Polly", "Amazon Forecast", "Amazon Rekognition"],
+    a: 0,
+    e: "Lookout for Vision uses CV to find defects in manufactured products from images." },
+  { d: "Mixed", q: "Which AWS service would you use to detect suspicious financial activity in an account?",
+    o: ["Amazon Fraud Detector", "Amazon Polly", "Amazon Forecast", "Amazon Rekognition"],
+    a: 0,
+    e: "Amazon Fraud Detector is purpose-built for fraud use cases (account takeover, payment fraud, etc.)." },
+  { d: "Mixed", q: "Which service is best for orchestrating multi-step ML pipelines (data prep → train → tune → deploy)?",
+    o: ["Amazon SageMaker Pipelines", "Amazon Polly", "Amazon Forecast", "Amazon Rekognition"],
+    a: 0,
+    e: "SageMaker Pipelines is AWS's purpose-built ML workflow orchestrator (built on Step Functions concepts)." },
+  { d: "Mixed", q: "Which AWS service is best for processing large-scale analytics to prepare features for ML?",
+    o: ["Amazon EMR (Spark/Hadoop) + AWS Glue + Athena", "Amazon Polly", "Amazon Forecast", "Amazon Rekognition"],
+    a: 0,
+    e: "EMR, Glue, and Athena are common choices for big-data preprocessing that feeds ML pipelines." },
+  { d: "Mixed", q: "Which AWS service is most useful for time-series forecasting in business planning?",
+    o: ["Amazon Forecast", "Amazon Polly", "Amazon Rekognition", "Amazon Lex"],
+    a: 0,
+    e: "Amazon Forecast is AWS's purpose-built time-series forecasting service." },
+  { d: "Mixed", q: "Which AWS capability helps prevent prompt injection and unsafe model outputs in a Bedrock app?",
+    o: ["Bedrock Guardrails (denied topics, content filters, sensitive info filters)", "AWS WAF only", "AWS Shield", "Amazon Polly"],
+    a: 0,
+    e: "Bedrock Guardrails add policy-based safety on top of any FM, including blocked topics and content filters." },
+  { d: "Mixed", q: "Which AWS service allows you to detect and protect personal data stored in S3 buckets?",
+    o: ["Amazon Macie", "AWS WAF", "AWS Shield", "Amazon Polly"],
+    a: 0,
+    e: "Amazon Macie discovers and classifies sensitive data (like PII) in S3 using ML." },
+  { d: "Mixed", q: "Which AWS service lets you train a model on sensitive data without that data leaving your VPC?",
+    o: ["SageMaker with VPC isolation + KMS + PrivateLink", "Amazon Polly", "Amazon Forecast", "Amazon Rekognition"],
+    a: 0,
+    e: "SageMaker supports training and inference inside a private VPC with KMS encryption and PrivateLink." },
+  { d: "Mixed", q: "Which AWS capability supports A/B testing different prompts or models in production?",
+    o: ["SageMaker + CloudWatch + Bedrock Model Evaluation", "Amazon Polly", "Amazon Forecast", "Amazon Rekognition"],
+    a: 0,
+    e: "Combine Bedrock Model Evaluation, SageMaker endpoints, and CloudWatch metrics to A/B test prompts/models." }
+];
+
+// Sanity check: we want exactly 130 questions.
+if (QUESTIONS.length !== 130) {
+  console.warn("Question count is " + QUESTIONS.length + ", expected 130.");
+}
+
+/* ----------------- Shuffle options (correct answer is always stored at index 0) ----------------- */
+(function shuffleOptions() {
+  for (const q of QUESTIONS) {
+    const order = q.o.map((_, i) => i);
+    for (let i = order.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+    q.o = order.map(i => q.o[i]);
+    q.a = order.indexOf(q.a);
+  }
+})();
+
+/* ----------------- App state ----------------- */
+let state = {
+  started: false,
+  current: 0,
+  answers: new Array(QUESTIONS.length).fill(null),
+  finished: false,
+  reviewMode: false
+};
+
+const appEl = document.getElementById("app");
+
+/* ----------------- Renderers ----------------- */
+function render() {
+  if (state.finished) return renderResults();
+  if (!state.started) {
+    return renderIntro();
+  }
+  return renderQuestion();
+}
+
+function renderIntro() {
+  appEl.innerHTML = `
+    <div class="card start-screen">
+      <h2>Ready to test your AI Practitioner knowledge?</h2>
+      <p>130 multiple-choice questions covering the five domains of the AWS Certified AI Practitioner (AIF-C01) exam guide.</p>
+      <ul>
+        <li>1 question at a time, 4 options each</li>
+        <li>Instant feedback with explanations</li>
+        <li>Final score, pass/fail verdict, and per-domain breakdown</li>
+        <li>Review the questions you got wrong</li>
+      </ul>
+      <p style="font-size:12px;color:var(--muted)">Passing target on the real exam: 70% (scaled score 700/1000).</p>
+      <button class="start-btn" id="startBtn">Start the exam</button>
+    </div>
+  `;
+  document.getElementById("startBtn").addEventListener("click", () => {
+    state.started = true;
+    state.current = 0;
+    render();
+  });
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[state.current];
+  const idx = state.current;
+  const total = QUESTIONS.length;
+  const progressPct = Math.round(((idx) / total) * 100);
+  const userAnswer = state.answers[idx];
+  const answered = userAnswer !== null;
+
+  let optionsHtml = q.o.map((text, i) => {
+    let cls = "option";
+    if (answered) {
+      cls += " disabled";
+      if (i === q.a) cls += " correct";
+      else if (i === userAnswer) cls += " wrong";
+    }
+    return `
+      <div class="${cls}" data-i="${i}">
+        <span class="letter">${String.fromCharCode(65 + i)}</span>
+        <span>${escapeHtml(text)}</span>
+      </div>
+    `;
+  }).join("");
+
+  let explanationHtml = "";
+  if (answered) {
+    explanationHtml = `
+      <div class="explanation">
+        <strong>Explanation:</strong> ${escapeHtml(q.e)}
+      </div>
+    `;
+  }
+
+  let actionsHtml = "";
+  if (!answered) {
+    actionsHtml = `
+      <div></div>
+      <div style="color:var(--muted);font-size:13px">Select an answer</div>
+    `;
+  } else {
+    const isLast = idx === total - 1;
+    actionsHtml = `
+      <button class="secondary" id="prevBtn" ${idx === 0 ? "disabled" : ""}>← Previous</button>
+      <button id="nextBtn">${isLast ? "Finish &amp; See Score" : "Next →"}</button>
+    `;
+  }
+
+  appEl.innerHTML = `
+    <div class="progress-bar"><div class="progress-fill" style="width:${progressPct}%"></div></div>
+    <div class="meta">
+      <span>Question <b>${idx + 1}</b> of <b>${total}</b></span>
+      <span>${answered ? "Answered ✓" : "Not answered"}</span>
+    </div>
+    <div class="card">
+      <span class="question-domain">${escapeHtml(q.d)}</span>
+      <p class="question-text">${escapeHtml(q.q)}</p>
+      <div class="options" id="options">${optionsHtml}</div>
+      ${explanationHtml}
+      <div class="actions">${actionsHtml}</div>
+    </div>
+  `;
+
+  if (!answered) {
+    document.querySelectorAll(".option").forEach(el => {
+      el.addEventListener("click", () => {
+        const i = parseInt(el.getAttribute("data-i"), 10);
+        state.answers[state.current] = i;
+        render();
+      });
+    });
+  } else {
+    const prev = document.getElementById("prevBtn");
+    const next = document.getElementById("nextBtn");
+    if (prev) prev.addEventListener("click", () => { state.current--; render(); });
+    if (next) next.addEventListener("click", () => {
+      if (state.current === total - 1) {
+        state.finished = true;
+        render();
+      } else {
+        state.current++;
+        render();
+      }
+    });
+  }
+}
+
+function renderResults() {
+  const total = QUESTIONS.length;
+  let correct = 0;
+  const byDomain = {};
+  for (let i = 0; i < total; i++) {
+    const q = QUESTIONS[i];
+    const isRight = state.answers[i] === q.a;
+    if (isRight) correct++;
+    if (!byDomain[q.d]) byDomain[q.d] = { total: 0, correct: 0 };
+    byDomain[q.d].total++;
+    if (isRight) byDomain[q.d].correct++;
+  }
+  const pct = Math.round((correct / total) * 100);
+  const passed = pct >= 70;
+
+  // Build domain breakdown rows
+  const domainRows = Object.entries(byDomain)
+    .sort((a, b) => b[1].total - a[1].total)
+    .map(([name, s]) => {
+      const p = Math.round((s.correct / s.total) * 100);
+      return `
+        <div class="domain-row">
+          <div class="domain-name">${escapeHtml(name)} <span style="color:var(--muted)">(${s.correct}/${s.total})</span></div>
+          <div class="domain-bar"><div class="domain-bar-fill" style="width:${p}%"></div></div>
+          <div class="domain-pct">${p}%</div>
+        </div>
+      `;
+    }).join("");
+
+  // Build review list
+  const wrongItems = [];
+  for (let i = 0; i < total; i++) {
+    const q = QUESTIONS[i];
+    const ua = state.answers[i];
+    if (ua === null) continue;
+    if (ua !== q.a) {
+      wrongItems.push({ idx: i, q, ua, correct: q.o[q.a] });
+    }
+  }
+  const reviewHtml = wrongItems.length === 0
+    ? `<p style="color:var(--muted)">No missed questions. 🎉</p>`
+    : wrongItems.map(item => `
+        <div class="review-item wrong-r">
+          <div class="q">Q${item.idx + 1}. ${escapeHtml(item.q.q)}</div>
+          <div class="a">Your answer: <u>${escapeHtml(item.q.o[item.ua])}</u><br>
+            Correct answer: <b>${escapeHtml(item.correct)}</b><br>
+            <span style="color:var(--muted)"><em>${escapeHtml(item.q.e)}</em></span>
+          </div>
+        </div>
+      `).join("");
+
+  const scoreDeg = Math.round((pct / 100) * 360);
+
+  appEl.innerHTML = `
+    <div class="card results-wrap">
+      <div class="score-circle" style="background: conic-gradient(var(--primary) ${scoreDeg}deg, var(--card-2) ${scoreDeg}deg);">
+        <div class="score-text">
+          <div class="pct">${pct}%</div>
+          <div class="lbl">${correct} / ${total}</div>
+        </div>
+      </div>
+      <div class="verdict ${passed ? "pass" : "fail"}">
+        ${passed ? "🎉 PASS — Ready for the real exam!" : "❌ Not yet — keep studying."}
+      </div>
+      <p style="color:var(--muted);margin:0 0 8px">Passing target: 70% (scaled 700/1000)</p>
+
+      <div class="stats">
+        <div class="stat"><div class="v">${correct}</div><div class="l">Correct</div></div>
+        <div class="stat"><div class="v">${total - correct}</div><div class="l">Incorrect</div></div>
+        <div class="stat"><div class="v">${pct}%</div><div class="l">Score</div></div>
+        <div class="stat"><div class="v">${state.answers.filter(a => a !== null).length}/${total}</div><div class="l">Answered</div></div>
+      </div>
+
+      <div class="domain-breakdown">
+        <h3>Score by domain</h3>
+        ${domainRows}
+      </div>
+
+      <div class="review-list">
+        <h3>Missed questions (${wrongItems.length})</h3>
+        ${reviewHtml}
+      </div>
+
+      <div class="actions" style="justify-content:center;margin-top:28px;gap:14px">
+        <button id="restartBtn">Restart exam</button>
+        <button class="secondary" id="reviewAllBtn">Review all answers</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("restartBtn").addEventListener("click", () => {
+    state.started = false;
+    state.current = 0;
+    state.answers = new Array(QUESTIONS.length).fill(null);
+    state.finished = false;
+    state.reviewMode = false;
+    render();
+  });
+  document.getElementById("reviewAllBtn").addEventListener("click", () => {
+    state.finished = false;
+    state.reviewMode = true;
+    // Show first answered question
+    for (let i = 0; i < state.answers.length; i++) {
+      if (state.answers[i] !== null) { state.current = i; break; }
+    }
+    render();
+  });
+}
+
+/* ----------------- Helpers ----------------- */
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+/* ----------------- Boot ----------------- */
+render();
+</script>
+</body>
+</html>
