@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certification Reviewers — Practice Exam Portal</title>
+  <style>
+    :root {
+      --aws-orange: #ff9900;
+      --aws-dark: #232f3e;
+      --aws-darker: #1a2433;
+      --aws-blue: #146eb4;
+      --aws-squid-ink: #0f1b2a;
+      --bg: #f7f8fa;
+      --card: #ffffff;
+      --border: #e1e4e8;
+      --text: #1a2433;
+      --text-muted: #5a6776;
+      --shadow: 0 2px 8px rgba(0,0,0,0.08);
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ---- Header ---- */
+    header {
+      background: var(--aws-dark);
+      color: #fff;
+      padding: 18px 0;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+
+    header .container {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    header .logo { font-size: 28px; }
+
+    header h1 { font-size: 20px; font-weight: 700; }
+
+    header .subtitle { font-size: 13px; color: #a4b0c0; }
+
+    /* ---- Layout ---- */
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    main { padding: 40px 0 60px; }
+
+    /* ---- Hero ---- */
+    .hero {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .hero h2 {
+      font-size: 30px;
+      color: var(--aws-dark);
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 15px;
+      max-width: 640px;
+      margin: 0 auto 22px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 12px 22px;
+      min-width: 130px;
+    }
+
+    .stat .num {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--aws-orange);
+      display: block;
+      line-height: 1.2;
+    }
+
+    .stat .lbl {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    /* ---- Category cards ---- */
+    .category {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+
+    .category-head {
+      background: var(--aws-dark);
+      color: #fff;
+      padding: 20px 26px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .category-head .cert-icon { font-size: 30px; }
+
+    .category-head h3 {
+      font-size: 18px;
+      font-weight: 700;
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .category-head .code-badge {
+      background: var(--aws-orange);
+      color: var(--aws-squid-ink);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 14px;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .category-body { padding: 22px 26px; }
+
+    .category-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .domain-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .chip {
+      background: #eef3f8;
+      border: 1px solid #d6e2ee;
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--aws-blue);
+      white-space: nowrap;
+    }
+
+    /* ---- Exam rows ---- */
+    .exam-list { list-style: none; }
+
+    .exam-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      transition: all 0.2s;
+      flex-wrap: wrap;
+    }
+
+    .exam-row:hover {
+      border-color: var(--aws-orange);
+      background: #fffdf7;
+    }
+
+    .exam-row .model-badge {
+      background: var(--aws-darker);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 6px;
+      white-space: nowrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .exam-row .exam-meta {
+      flex: 1;
+      font-size: 13px;
+      color: var(--text-muted);
+      min-width: 160px;
+    }
+
+    .exam-row .exam-meta strong {
+      color: var(--text);
+      font-size: 14px;
+      display: block;
+    }
+
+    .exam-row .qcount {
+      background: #e8f5e9;
+      color: #1a7f37;
+      border: 1px solid #bfe3c8;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--aws-orange);
+      color: var(--aws-squid-ink);
+      text-decoration: none;
+      border: none;
+      padding: 10px 22px;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 8px;
+      transition: all 0.2s;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      background: #e8881a;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(255,153,0,0.35);
+    }
+
+    /* ---- Footer ---- */
+    footer {
+      background: var(--aws-darker);
+      color: #a4b0c0;
+      text-align: center;
+      padding: 24px 0;
+      font-size: 13px;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 640px) {
+      .container { padding: 0 16px; }
+      .category-body { padding: 18px; }
+      .exam-row { flex-direction: column; align-items: stretch; }
+      .exam-row .btn { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <span class="logo">&#127891;</span>
+      <div>
+        <h1>Certification Reviewers</h1>
+        <div class="subtitle">Interactive Practice Exam Portal</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+
+      <!-- ============ HERO ============ -->
+      <section class="hero">
+        <h2>Choose a Certification Track</h2>
+        <p>
+          Self-contained, interactive practice exam simulators for AWS certifications.
+          Each exam follows the official domain weightings, includes full answer explanations,
+          and scores you against a 70% passing threshold.
+        </p>
+        <div class="hero-stats">
+          <div class="stat"><span class="num">2</span><span class="lbl">Certifications</span></div>
+          <div class="stat"><span class="num">3</span><span class="lbl">Exam Variants</span></div>
+          <div class="stat"><span class="num">7</span><span class="lbl">Practice Exams</span></div>
+        </div>
+      </section>
+
+      <!-- ============ AIF-C01 ============ -->
+      <section class="category">
+        <div class="category-head">
+          <span class="cert-icon">&#129302;</span>
+          <h3>AWS Certified AI Practitioner</h3>
+          <span class="code-badge">AIF-C01</span>
+        </div>
+        <div class="category-body">
+          <p class="category-desc">
+            Validates foundational knowledge of AI/ML concepts, generative AI, foundation models,
+            and responsible AI practices. 130 questions per exam &mdash; 70% to pass.
+          </p>
+          <div class="domain-chips">
+            <span class="chip">AI &amp; ML Fundamentals (20%)</span>
+            <span class="chip">Generative AI Fundamentals (24%)</span>
+            <span class="chip">Applications of Foundation Models (28%)</span>
+            <span class="chip">Responsible AI (14%)</span>
+            <span class="chip">Security, Compliance &amp; Governance (14%)</span>
+          </div>
+          <ul class="exam-list">
+            <li class="exam-row">
+              <span class="model-badge">claude-opus-4.8</span>
+              <span class="exam-meta"><strong>Practice Exam &mdash; claude-opus-4.8</strong>Single-file simulator with explanations</span>
+              <span class="qcount">130 Q</span>
+              <a class="btn" href="AWS/AIF-C01/claude-opus-4.8/index.html">Start Exam &#8594;</a>
+            </li>
+            <li class="exam-row">
+              <span class="model-badge">glm-5.2</span>
+              <span class="exam-meta"><strong>Practice Exam &mdash; glm-5.2</strong>Full simulator with domain score breakdown</span>
+              <span class="qcount">130 Q</span>
+              <a class="btn" href="AWS/AIF-C01/glm-5.2/index.html">Start Exam &#8594;</a>
+            </li>
+            <li class="exam-row">
+              <span class="model-badge">minimax-m3</span>
+              <span class="exam-meta"><strong>Practice Quiz &mdash; minimax-m3</strong>Single-file quiz variant</span>
+              <span class="qcount">130 Q</span>
+              <a class="btn" href="AWS/AIF-C01/minimax-m3/aws-aif-c01-quiz.html">Start Exam &#8594;</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============ CLF-C02 ============ -->
+      <section class="category">
+        <div class="category-head">
+          <span class="cert-icon">&#9729;&#65039;</span>
+          <h3>AWS Certified Cloud Practitioner &mdash; Set 1</h3>
+          <span class="code-badge">CLF-C02</span>
+        </div>
+        <div class="category-body">
+          <p class="category-desc">
+            Validates overall understanding of the AWS Cloud platform: cloud concepts, security,
+            core services, and billing. 130 questions per exam &mdash; 70% to pass.
+          </p>
+          <div class="domain-chips">
+            <span class="chip">Cloud Concepts (24%)</span>
+            <span class="chip">Security &amp; Compliance (30%)</span>
+            <span class="chip">Cloud Technology &amp; Services (34%)</span>
+            <span class="chip">Billing, Pricing &amp; Support (12%)</span>
+          </div>
+          <ul class="exam-list">
+            <li class="exam-row">
+              <span class="model-badge">claude-sonnet-5</span>
+              <span class="exam-meta"><strong>Practice Exam &mdash; claude-sonnet-5</strong>Set 1 question bank</span>
+              <span class="qcount">130 Q</span>
+              <a class="btn" href="AWS/CLF-C02/claude-sonnet-5/index.html">Start Exam &#8594;</a>
+            </li>
+            <li class="exam-row">
+              <span class="model-badge">qwen3.8-max</span>
+              <span class="exam-meta"><strong>Practice Exam &mdash; qwen3.8-max</strong>Set 1 question bank</span>
+              <span class="qcount">130 Q</span>
+              <a class="btn" href="AWS/CLF-C02/qwen3.8-max/index.html">Start Exam &#8594;</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============ CLF-C02 Set 2 ============ -->
+      <section class="category">
+        <div class="category-head">
+          <span class="cert-icon">&#128218;</span>
+          <h3>AWS Certified Cloud Practitioner &mdash; Set 2</h3>
+          <span class="code-badge">CLF-C02</span>
+        </div>
+        <div class="category-body">
+          <p class="category-desc">
+            An alternate set of Cloud Practitioner practice exams focused on scenario-based
+            service selection, support plans, and pricing.
+            130 questions per exam &mdash; 70% to pass.
+          </p>
+          <div class="domain-chips">
+            <span class="chip">Cloud Concepts (24%)</span>
+            <span class="chip">Security &amp; Compliance (30%)</span>
+            <span class="chip">Cloud Technology &amp; Services (34%)</span>
+            <span class="chip">Billing, Pricing &amp; Support (12%)</span>
+          </div>
+          <ul class="exam-list">
+            <li class="exam-row">
+              <span class="model-badge">claude-sonnet-5</span>
+              <span class="exam-meta"><strong>Practice Exam &mdash; claude-sonnet-5</strong>Set 2 question bank</span>
+              <span class="qcount">130 Q</span>
+              <a class="btn" href="AWS/CLF-C02-Set2/claude-sonnet-5/index.html">Start Exam &#8594;</a>
+            </li>
+            <li class="exam-row">
+              <span class="model-badge">qwen3.8-max</span>
+              <span class="exam-meta"><strong>Practice Exam &mdash; qwen3.8-max</strong>Set 2 question bank</span>
+              <span class="qcount">130 Q</span>
+              <a class="btn" href="AWS/CLF-C02-Set2/qwen3.8-max/index.html">Start Exam &#8594;</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      Certification Reviewers &mdash; static, offline-friendly practice exams. Deploy by hosting this folder as-is.
+    </div>
+  </footer>
+
+</body>
+</html>
