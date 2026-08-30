@@ -230,7 +230,10 @@
       <p id="question-text"></p>
       <div id="options"></div>
       <div class="nav-row">
-        <button class="btn secondary" id="prev-btn" onclick="prevQuestion()">Previous</button>
+        <div style="display:flex; gap:10px;">
+          <button class="btn secondary" id="prev-btn" onclick="prevQuestion()">Previous</button>
+          <button class="btn secondary" id="reset-btn" onclick="resetReview()">Reset Review</button>
+        </div>
         <div class="right">
           <button class="btn secondary" id="finish-btn" onclick="confirmFinish()" style="display:none">Finish Exam</button>
           <button class="btn" id="next-btn" onclick="nextQuestion()">Next</button>
@@ -252,7 +255,7 @@
       </div>
       <div style="display:flex; gap:10px; margin-bottom: 10px;">
         <button class="btn secondary" onclick="toggleReview()" id="review-toggle-btn">Show Answer Review</button>
-        <button class="btn secondary" onclick="location.reload()">Retake Exam</button>
+        <button class="btn secondary" onclick="startQuiz()">Retake Exam</button>
       </div>
       <div id="review-list"></div>
     </div>
@@ -407,6 +410,47 @@ let quizQuestions = [];
 let userAnswers = [];
 let currentIndex = 0;
 
+const STORAGE_KEY = "cert-reviewer:" + location.pathname;
+
+function saveState(phase) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      v: 1,
+      phase: phase,
+      currentIndex: currentIndex,
+      userAnswers: userAnswers,
+      quizQuestions: quizQuestions
+    }));
+  } catch (e) {}
+}
+
+function loadState() {
+  try {
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (!data || data.v !== 1) return null;
+    if (data.phase !== "quiz" && data.phase !== "result") return null;
+    if (!Array.isArray(data.quizQuestions) || data.quizQuestions.length !== QUESTIONS.length) return null;
+    if (!Array.isArray(data.userAnswers) || data.userAnswers.length !== data.quizQuestions.length) return null;
+    if (typeof data.currentIndex !== "number" || data.currentIndex < 0 || data.currentIndex >= data.quizQuestions.length) return null;
+    const valid = data.quizQuestions.every((q, i) => {
+      if (!q || !Array.isArray(q.opts) || typeof q.correct !== "string") return false;
+      if (!q.opts.includes(q.correct)) return false;
+      const a = data.userAnswers[i];
+      return a === null || (typeof a === "string" && q.opts.includes(a));
+    });
+    if (!valid) return null;
+    return data;
+  } catch (e) {
+    return null;
+  }
+}
+
+function clearState() {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (e) {}
+}
+
 function shuffle(arr) {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -417,6 +461,7 @@ function shuffle(arr) {
 }
 
 function startQuiz() {
+  clearState();
   quizQuestions = shuffle(QUESTIONS).map(q => ({
     d: q.d,
     q: q.q,
@@ -430,6 +475,7 @@ function startQuiz() {
   document.getElementById('quiz-screen').style.display = 'block';
   buildPalette();
   renderQuestion();
+  saveState("quiz");
 }
 
 function buildPalette() {
@@ -438,7 +484,7 @@ function buildPalette() {
   quizQuestions.forEach((_, i) => {
     const btn = document.createElement('button');
     btn.textContent = i + 1;
-    btn.onclick = () => { currentIndex = i; renderQuestion(); };
+    btn.onclick = () => { currentIndex = i; renderQuestion(); saveState("quiz"); };
     btn.id = 'palette-btn-' + i;
     palette.appendChild(btn);
   });
@@ -472,6 +518,7 @@ function renderQuestion() {
     label.onclick = () => {
       userAnswers[currentIndex] = opt;
       renderQuestion();
+      saveState("quiz");
     };
     optionsDiv.appendChild(label);
   });
@@ -488,6 +535,7 @@ function nextQuestion() {
   if (currentIndex < quizQuestions.length - 1) {
     currentIndex++;
     renderQuestion();
+    saveState("quiz");
   }
 }
 
@@ -495,6 +543,7 @@ function prevQuestion() {
   if (currentIndex > 0) {
     currentIndex--;
     renderQuestion();
+    saveState("quiz");
   }
 }
 
@@ -508,6 +557,7 @@ function confirmFinish() {
 }
 
 function finishQuiz() {
+  saveState("result");
   let score = 0;
   let incorrect = 0;
   let unanswered = 0;
@@ -576,6 +626,33 @@ function toggleReview() {
   list.style.display = visible ? 'none' : 'block';
   btn.textContent = visible ? 'Show Answer Review' : 'Hide Answer Review';
 }
+
+function resetReview() {
+  if (!confirm('Reset this review? Your saved progress and answers will be cleared.')) return;
+  clearState();
+  quizQuestions = [];
+  userAnswers = [];
+  currentIndex = 0;
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('start-screen').style.display = '';
+}
+
+(function boot() {
+  const saved = loadState();
+  if (!saved) return;
+  quizQuestions = saved.quizQuestions;
+  userAnswers = saved.userAnswers;
+  currentIndex = saved.currentIndex;
+  if (saved.phase === "result") {
+    finishQuiz();
+  } else {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('quiz-screen').style.display = 'block';
+    buildPalette();
+    renderQuestion();
+  }
+})();
 </script>
 </body>
 </html>

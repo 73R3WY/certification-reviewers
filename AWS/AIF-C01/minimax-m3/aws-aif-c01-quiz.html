@@ -953,6 +953,51 @@ let state = {
 
 const appEl = document.getElementById("app");
 
+/* ----------------- Persistence ----------------- */
+const STORAGE_KEY = "cert-reviewer:" + location.pathname;
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      v: 1,
+      started: state.started,
+      current: state.current,
+      finished: state.finished,
+      reviewMode: state.reviewMode,
+      answers: state.answers.map((a, i) => (a === null ? null : QUESTIONS[i].o[a]))
+    }));
+  } catch (e) {}
+}
+
+function loadState() {
+  try {
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (!data || data.v !== 1) return null;
+    if (!Array.isArray(data.answers) || data.answers.length !== QUESTIONS.length) return null;
+    if (typeof data.current !== "number" || data.current < 0 || data.current >= QUESTIONS.length) return null;
+    const answers = data.answers.map((text, i) => {
+      if (text === null) return null;
+      const idx = QUESTIONS[i].o.indexOf(text);
+      return idx === -1 ? null : idx;
+    });
+    return {
+      started: !!data.started,
+      current: data.current,
+      finished: !!data.finished,
+      reviewMode: !!data.reviewMode,
+      answers: answers
+    };
+  } catch (e) {
+    return null;
+  }
+}
+
+function clearState() {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (e) {}
+}
+
 /* ----------------- Renderers ----------------- */
 function render() {
   if (state.finished) return renderResults();
@@ -981,6 +1026,7 @@ function renderIntro() {
     state.started = true;
     state.current = 0;
     render();
+    saveState();
   });
 }
 
@@ -1035,6 +1081,7 @@ function renderQuestion() {
     <div class="meta">
       <span>Question <b>${idx + 1}</b> of <b>${total}</b></span>
       <span>${answered ? "Answered ✓" : "Not answered"}</span>
+      <button class="secondary" id="resetBtn" style="padding:4px 12px;font-size:12px;">Reset Review</button>
     </div>
     <div class="card">
       <span class="question-domain">${escapeHtml(q.d)}</span>
@@ -1051,22 +1098,36 @@ function renderQuestion() {
         const i = parseInt(el.getAttribute("data-i"), 10);
         state.answers[state.current] = i;
         render();
+        saveState();
       });
     });
   } else {
     const prev = document.getElementById("prevBtn");
     const next = document.getElementById("nextBtn");
-    if (prev) prev.addEventListener("click", () => { state.current--; render(); });
+    if (prev) prev.addEventListener("click", () => { state.current--; render(); saveState(); });
     if (next) next.addEventListener("click", () => {
       if (state.current === total - 1) {
         state.finished = true;
         render();
+        saveState();
       } else {
         state.current++;
         render();
+        saveState();
       }
     });
   }
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    if (!confirm("Reset this review? Your saved progress and answers will be cleared.")) return;
+    clearState();
+    state.started = false;
+    state.current = 0;
+    state.answers = new Array(QUESTIONS.length).fill(null);
+    state.finished = false;
+    state.reviewMode = false;
+    render();
+  });
 }
 
 function renderResults() {
@@ -1160,6 +1221,7 @@ function renderResults() {
   `;
 
   document.getElementById("restartBtn").addEventListener("click", () => {
+    clearState();
     state.started = false;
     state.current = 0;
     state.answers = new Array(QUESTIONS.length).fill(null);
@@ -1175,6 +1237,7 @@ function renderResults() {
       if (state.answers[i] !== null) { state.current = i; break; }
     }
     render();
+    saveState();
   });
 }
 
@@ -1189,6 +1252,14 @@ function escapeHtml(s) {
 }
 
 /* ----------------- Boot ----------------- */
+const savedState = loadState();
+if (savedState && (savedState.started || savedState.finished)) {
+  state.started = savedState.started;
+  state.current = savedState.current;
+  state.answers = savedState.answers;
+  state.finished = savedState.finished;
+  state.reviewMode = savedState.reviewMode;
+}
 render();
 </script>
 </body>

@@ -22,6 +22,59 @@
   const questionText = document.getElementById("question-text");
   const optionsContainer = document.getElementById("options");
   const quizNav = document.getElementById("quiz-nav");
+  const resetBtn = document.getElementById("reset-btn");
+
+  // ---- Persistence ----
+  const STORAGE_KEY = "cert-reviewer:" + location.pathname;
+
+  function saveState(phase) {
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          v: 1,
+          phase: phase,
+          currentIndex: currentIndex,
+          userAnswers: userAnswers
+        })
+      );
+    } catch (e) {}
+  }
+
+  function loadState() {
+    try {
+      const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if (!data || data.v !== 1) return null;
+      if (data.phase !== "quiz" && data.phase !== "result") return null;
+      if (
+        typeof data.currentIndex !== "number" ||
+        data.currentIndex < 0 ||
+        data.currentIndex >= TOTAL_QUESTIONS
+      ) {
+        return null;
+      }
+      if (
+        !Array.isArray(data.userAnswers) ||
+        data.userAnswers.length !== TOTAL_QUESTIONS
+      ) {
+        return null;
+      }
+      const answers = data.userAnswers.map(function (a, i) {
+        return typeof a === "number" && a >= 0 && a < QUESTIONS[i].options.length
+          ? a
+          : null;
+      });
+      return { phase: data.phase, currentIndex: data.currentIndex, userAnswers: answers };
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function clearState() {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (e) {}
+  }
 
   // ---- Helpers ----
   function show(screen) {
@@ -66,6 +119,7 @@
         li.classList.add("selected");
         nextBtn.disabled = false;
         submitBtn.disabled = false;
+        saveState("quiz");
       });
 
       const letter = document.createElement("span");
@@ -105,12 +159,14 @@
     userAnswers = new Array(TOTAL_QUESTIONS).fill(null);
     show(quizScreen);
     renderQuestion();
+    saveState("quiz");
   });
 
   prevBtn.addEventListener("click", function () {
     if (currentIndex > 0) {
       currentIndex--;
       renderQuestion();
+      saveState("quiz");
     }
   });
 
@@ -119,10 +175,12 @@
       currentIndex++;
       renderQuestion();
       window.scrollTo({ top: 0, behavior: "smooth" });
+      saveState("quiz");
     }
   });
 
   submitBtn.addEventListener("click", function () {
+    saveState("result");
     renderResults();
   });
 
@@ -228,6 +286,30 @@
   }
 
   restartBtn.addEventListener("click", function () {
+    clearState();
     show(startScreen);
   });
+
+  resetBtn.addEventListener("click", function () {
+    if (!window.confirm("Reset this review? Your saved progress and answers will be cleared.")) {
+      return;
+    }
+    clearState();
+    currentIndex = 0;
+    userAnswers = new Array(TOTAL_QUESTIONS).fill(null);
+    show(startScreen);
+  });
+
+  // ---- Boot ----
+  const saved = loadState();
+  if (saved) {
+    userAnswers = saved.userAnswers;
+    currentIndex = saved.currentIndex;
+    if (saved.phase === "result") {
+      renderResults();
+    } else {
+      show(quizScreen);
+      renderQuestion();
+    }
+  }
 })();
