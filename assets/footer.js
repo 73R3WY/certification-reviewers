@@ -4,7 +4,6 @@
   if (document.querySelector(".site-footer")) return;
 
   var YEAR = new Date().getFullYear() || 2026;
-  var isFile = window.location.protocol === "file:";
 
   var style = document.createElement("style");
   style.id = "site-footer-styles";
@@ -38,7 +37,6 @@
     "  justify-content: center;",
     "  gap: 8px;",
     "}",
-    ".site-footer__badges iframe { border: none; }",
     ".site-footer__badge {",
     "  position: relative;",
     "  display: flex;",
@@ -88,22 +86,9 @@
     );
   }
 
-  function badgeEmbed(id) {
-    return (
-      '<div data-iframe-width="45" data-iframe-height="81" data-share-badge-id="' + id + '" data-share-badge-host="https://www.credly.com"></div>'
-    );
-  }
-
-  var badgesHTML;
-  if (isFile) {
-    badgesHTML =
-      badgeAnchor("48f3e4d3-000d-4166-9af4-68d585299ae8", "4d4693bb-530e-4bca-9327-de07f3aa2348/image.png", "AWS Certified AI Practitioner") +
-      badgeAnchor("2fde6be5-5a1d-42a8-ab03-ce141bab9d84", "00634f82-b07f-4bbd-a6bb-53de397fc3a6/image.png", "AWS Certified Cloud Practitioner");
-  } else {
-    badgesHTML =
-      badgeEmbed("48f3e4d3-000d-4166-9af4-68d585299ae8") +
-      badgeEmbed("2fde6be5-5a1d-42a8-ab03-ce141bab9d84");
-  }
+  var badgesHTML =
+    badgeAnchor("48f3e4d3-000d-4166-9af4-68d585299ae8", "4d4693bb-530e-4bca-9327-de07f3aa2348/image.png", "AWS Certified AI Practitioner") +
+    badgeAnchor("2fde6be5-5a1d-42a8-ab03-ce141bab9d84", "00634f82-b07f-4bbd-a6bb-53de397fc3a6/image.png", "AWS Certified Cloud Practitioner");
 
   var footer = document.createElement("footer");
   footer.className = "site-footer";
@@ -117,12 +102,4 @@
       "</div>" +
     "</div>";
   document.body.appendChild(footer);
-
-  if (!isFile) {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.async = true;
-    script.src = "https://cdn.credly.com/assets/utilities/embed.js";
-    document.body.appendChild(script);
-  }
 })();
