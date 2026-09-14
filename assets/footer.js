@@ -8,13 +8,18 @@
   var style = document.createElement("style");
   style.id = "site-footer-styles";
   style.textContent = [
+    "body {",
+    "  display: flex;",
+    "  flex-direction: column;",
+    "  min-height: 100vh;",
+    "}",
     ".site-footer {",
     "  background: #1a2433;",
     "  color: #a4b0c0;",
     "  font-size: 13px;",
     "  line-height: 1.5;",
     "  padding: 14px 20px;",
-    "  margin-top: 40px;",
+    "  margin-top: auto;",
     "}",
     ".site-footer__inner {",
     "  max-width: 980px;",
