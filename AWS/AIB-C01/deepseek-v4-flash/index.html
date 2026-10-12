@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS Certified AI Business Strategist (AIB-C01) Practice Exam</title>
+<style>
+  :root {
+    --navy: #232f3e;
+    --navy-2: #16202c;
+    --orange: #ff9900;
+    --orange-dark: #e88b00;
+    --green: #1d8102;
+    --red: #d13212;
+    --bg: #f2f3f3;
+    --card: #ffffff;
+    --border: #d5dbdb;
+    --text: #16191f;
+    --muted: #5f6b7a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  header {
+    background: var(--navy);
+    color: #fff;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  header h1 {
+    font-size: 18px;
+    margin: 0;
+    font-weight: 600;
+  }
+  header .badge {
+    background: var(--orange);
+    color: var(--navy-2);
+    font-weight: 700;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 12px;
+  }
+  #app {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  #start-screen h2 { margin-top: 0; }
+  #start-screen ul { line-height: 1.8; color: var(--muted); }
+  .btn {
+    display: inline-block;
+    background: var(--orange);
+    color: var(--navy-2);
+    border: none;
+    padding: 12px 22px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .btn:hover { background: var(--orange-dark); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn.secondary {
+    background: #fff;
+    color: var(--navy);
+    border: 1px solid var(--border);
+  }
+  .btn.secondary:hover { background: #f2f3f3; }
+  #quiz-screen { display: none; }
+  #result-screen { display: none; }
+  .progress-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .progress-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--orange);
+    transition: width 0.2s ease;
+  }
+  #palette {
+    display: grid;
+    grid-template-columns: repeat(13, 1fr);
+    gap: 5px;
+    margin-bottom: 20px;
+  }
+  #palette button {
+    aspect-ratio: 1;
+    border: 1px solid var(--border);
+    background: #fff;
+    border-radius: 4px;
+    font-size: 10px;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 0;
+  }
+  #palette button.answered { background: #e8f4d9; border-color: #b7d89a; color: #2c5200; }
+  #palette button.current { border: 2px solid var(--orange); font-weight: 700; color: var(--navy); }
+  .tag-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .domain-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--orange-dark);
+    background: #fff4e0;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .multi-tag {
+    display: none;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #146eb4;
+    background: #e7f0fa;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  #question-text {
+    font-size: 17px;
+    line-height: 1.5;
+    margin: 0 0 20px;
+  }
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .option:hover { border-color: var(--orange); background: #fffaf2; }
+  .option.selected { border-color: var(--orange); background: #fff4e0; }
+  .option input { margin-top: 3px; flex-shrink: 0; }
+  .option span { line-height: 1.4; }
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .nav-row .right { display: flex; gap: 10px; }
+  #result-screen .score-big {
+    font-size: 48px;
+    font-weight: 800;
+    margin: 6px 0;
+  }
+  #result-screen .pass { color: var(--green); }
+  #result-screen .fail { color: var(--red); }
+  #result-screen .summary {
+    display: flex;
+    gap: 24px;
+    margin: 18px 0 28px;
+    flex-wrap: wrap;
+  }
+  #result-screen .stat {
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 12px 18px;
+    min-width: 120px;
+  }
+  #result-screen .stat .num { font-size: 22px; font-weight: 700; }
+  #result-screen .stat .label { font-size: 12px; color: var(--muted); text-transform: uppercase; }
+  .review-item {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .review-item.correct { border-left: 4px solid var(--green); }
+  .review-item.incorrect { border-left: 4px solid var(--red); }
+  .review-item .rq { font-weight: 600; margin-bottom: 8px; }
+  .review-item .ra { font-size: 14px; margin: 4px 0; }
+  .review-item .ra.your-wrong { color: var(--red); }
+  .review-item .ra.correct-answer { color: var(--green); }
+  .review-item .exp { font-size: 13px; color: var(--muted); margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); }
+  #review-list { display: none; }
+  @media (max-width: 640px) {
+    #palette { grid-template-columns: repeat(10, 1fr); }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>AWS Certified AI Business Strategist &mdash; Practice Exam</h1>
+  <span class="badge">AIB-C01</span>
+</header>
+
+<div id="app">
+
+  <div id="start-screen" class="card">
+    <h2>130-Question Practice Exam</h2>
+    <p>This simulates the AWS Certified AI Business Strategist (AIB-C01) exam across all four official domains. The real exam validates the ability to translate AI capabilities into business outcomes, establish responsible AI practices, and drive AI adoption at scale:</p>
+    <ul>
+      <li>Domain 1: AI Fundamentals and Literacy</li>
+      <li>Domain 2: AI Strategy and Business Value Creation</li>
+      <li>Domain 3: AI Governance and Responsible AI Leadership</li>
+      <li>Domain 4: Business Readiness, Leadership, and AI Transformation</li>
+    </ul>
+    <p style="color: var(--muted); font-size: 14px;">Questions use the real exam&rsquo;s two formats: single-select multiple choice and multiple response (&ldquo;Select all that apply&rdquo;). Multiple-response questions require selecting every correct option to receive credit. Questions and answer choices are shuffled each time you start. Your score, pass/fail status (70% threshold), and a full answer review are shown at the end.</p>
+    <button class="btn" onclick="startQuiz()">Start Exam</button>
+  </div>
+
+  <div id="quiz-screen">
+    <div class="card">
+      <div class="progress-row">
+        <span id="progress-label">Question 1 of 130</span>
+        <span id="answered-label">0 answered</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <div id="palette"></div>
+      <div class="tag-row">
+        <span class="domain-tag" id="domain-tag"></span>
+        <span class="multi-tag" id="multi-tag">Select all that apply</span>
+      </div>
+      <p id="question-text"></p>
+      <div id="options"></div>
+      <div class="nav-row">
+        <div style="display:flex; gap:10px;">
+          <button class="btn secondary" id="prev-btn" onclick="prevQuestion()">Previous</button>
+          <button class="btn secondary" id="reset-btn" onclick="resetReview()">Reset Review</button>
+        </div>
+        <div class="right">
+          <button class="btn secondary" id="finish-btn" onclick="confirmFinish()" style="display:none">Finish Exam</button>
+          <button class="btn" id="next-btn" onclick="nextQuestion()">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="result-screen">
+    <div class="card">
+      <h2>Exam Results</h2>
+      <div class="score-big" id="score-big"></div>
+      <div id="pass-label" style="font-size:18px; font-weight:700;"></div>
+      <div class="summary">
+        <div class="stat"><div class="num" id="stat-correct"></div><div class="label">Correct</div></div>
+        <div class="stat"><div class="num" id="stat-incorrect"></div><div class="label">Incorrect</div></div>
+        <div class="stat"><div class="num" id="stat-unanswered"></div><div class="label">Unanswered</div></div>
+        <div class="stat"><div class="num" id="stat-pct"></div><div class="label">Score</div></div>
+      </div>
+      <div style="display:flex; gap:10px; margin-bottom: 10px; flex-wrap: wrap;">
+        <button class="btn secondary" onclick="toggleReview()" id="review-toggle-btn">Show Answer Review</button>
+        <button class="btn secondary" onclick="startQuiz()">Retake Exam</button>
+      </div>
+      <div id="review-list"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const QUESTIONS = [
+  // ---------------- DOMAIN 1: AI Fundamentals and Literacy (31) ----------------
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"What is Artificial Intelligence (AI) in a business context?", opts:["A broad field of computer science focused on systems that perform tasks requiring human-like intelligence","A specific algorithm for sorting spreadsheet data","A hardware device used only for graphics rendering","A database query language for financial reporting"], correct:"A broad field of computer science focused on systems that perform tasks requiring human-like intelligence", exp:"AI is the overarching field; ML and GenAI are subsets of it."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"Machine Learning (ML) is best described as:", opts:["A subset of AI where systems learn patterns from data rather than following explicit rules","A manual process for coding every business rule by hand","A type of relational database","A spreadsheet formula language"], correct:"A subset of AI where systems learn patterns from data rather than following explicit rules", exp:"ML models learn statistical patterns from data instead of relying on hard-coded logic."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"What distinguishes Generative AI (GenAI) from traditional predictive ML?", opts:["GenAI creates new content such as text, images, or code, while predictive ML classifies or forecasts existing patterns","GenAI can only work with numeric tabular data","GenAI requires no data at all","Predictive ML creates new content while GenAI only classifies"], correct:"GenAI creates new content such as text, images, or code, while predictive ML classifies or forecasts existing patterns", exp:"GenAI produces novel outputs; predictive ML maps inputs to known labels or values."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"Structured data is best described as:", opts:["Data organized in a predefined format, such as rows and columns in a database or spreadsheet","Free-form text documents and emails","Raw audio and video streams","Unlabeled social media posts"], correct:"Data organized in a predefined format, such as rows and columns in a database or spreadsheet", exp:"Structured data fits neatly into tables; unstructured data (text, audio, video) does not."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"Unstructured data is best described as:", opts:["Data that lacks a predefined format, such as text, images, audio, and video","Data stored in relational tables with foreign keys","Data that is always numeric","Data that cannot be processed by any AI system"], correct:"Data that lacks a predefined format, such as text, images, audio, and video", exp:"Most enterprise data is unstructured; AI helps extract value from it."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"Why does data quality matter for AI outcomes?", opts:["AI systems learn patterns from data, so poor-quality or biased data produces unreliable results","Data quality only affects storage costs","AI models ignore data quality entirely","Data quality is only relevant for databases, not AI"], correct:"AI systems learn patterns from data, so poor-quality or biased data produces unreliable results", exp:"Garbage in, garbage out: data quality directly determines model reliability and fairness."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"Training an AI model using historical data means:", opts:["Teaching the model to recognize patterns from past examples so it can generalize to new situations","Storing the data in a data warehouse for reporting","Deleting old data to save storage","Manually writing business rules for every case"], correct:"Teaching the model to recognize patterns from past examples so it can generalize to new situations", exp:"Historical data is the training material from which the model learns patterns."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"Inference refers to:", opts:["Using a trained model to generate predictions or outputs on new data","The initial collection of training data","Setting hyperparameters before training","Encrypting data before storage"], correct:"Using a trained model to generate predictions or outputs on new data", exp:"Inference happens after training when the model is applied to new inputs."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"How would you explain the difference between an algorithm and a model to a business stakeholder?", opts:["An algorithm is the general procedure, while a model is the algorithm applied to data with learned parameters","An algorithm and a model are the exact same thing","A model is the hardware and an algorithm is the software","Algorithms exist only in spreadsheets"], correct:"An algorithm is the general procedure, while a model is the algorithm applied to data with learned parameters", exp:"Algorithms are recipes; models are the concrete learned instances of those recipes."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"A prediction produced by an ML model is best described as:", opts:["A model's output estimating an outcome based on learned patterns from data","A guarantee that an event will happen","A random guess with no data basis","A database query result"], correct:"A model's output estimating an outcome based on learned patterns from data", exp:"Predictions are probabilistic estimates, not certainties."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"What is the purpose of ISO/IEC 23053?", opts:["It provides a framework for describing AI and ML systems and their lifecycle","It is a programming language standard","It defines database schema formats","It is a data privacy law"], correct:"It provides a framework for describing AI and ML systems and their lifecycle", exp:"ISO/IEC 23053 establishes a common vocabulary/framework for AI and ML systems."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"What is ISO/IEC 42001?", opts:["An international standard for AI management systems (AIMS) covering governance and responsible use","A wireless networking standard","A cloud security certification","A video encoding format"], correct:"An international standard for AI management systems (AIMS) covering governance and responsible use", exp:"ISO/IEC 42001 provides requirements and guidance for managing AI responsibly."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"When is rule-based automation generally preferred over an AI solution?", opts:["When the decision logic is well-defined, stable, and can be expressed as explicit rules","When the task requires understanding ambiguous natural language","When patterns must be learned from large volumes of unstructured data","When outcomes change frequently in unpredictable ways"], correct:"When the decision logic is well-defined, stable, and can be expressed as explicit rules", exp:"Rule-based systems are transparent and cheap for deterministic, stable logic; AI fits complex or changing patterns."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"When is an AI solution generally a better choice than rule-based automation?", opts:["When the problem involves complex patterns, unstructured data, or tasks too difficult to code as explicit rules","When the process has a few fixed conditions that never change","When absolute deterministic behavior is required and auditable","When the logic fits in a simple lookup table"], correct:"When the problem involves complex patterns, unstructured data, or tasks too difficult to code as explicit rules", exp:"AI excels where rules are impractical: language, images, and evolving patterns."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"What is a defining capability of AI agents?", opts:["Autonomy: the ability to operate toward a goal with limited direct human supervision","The ability to store relational data","Guaranteed accuracy on every task","Being unable to call external tools"], correct:"Autonomy: the ability to operate toward a goal with limited direct human supervision", exp:"AI agents act independently within boundaries to accomplish goals."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"Tool use in AI agents means:", opts:["Agents can call external APIs, services, or functions to gather information or take actions","Agents can only respond with pre-written text","Agents require a human for every single step","Agents run only on physical hardware"], correct:"Agents can call external APIs, services, or functions to gather information or take actions", exp:"Tool use lets agents complete real-world tasks beyond the model's own knowledge."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"Orchestration in the context of AI agents refers to:", opts:["Coordinating multiple agents or steps to complete a complex multi-stage task","Deleting unused agent configurations","A database indexing strategy","A hardware cooling mechanism"], correct:"Coordinating multiple agents or steps to complete a complex multi-stage task", exp:"Orchestration manages how agents divide work and interact to reach an outcome."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"Model drift refers to:", opts:["A model's performance degrading over time because the data or environment it operates in has changed","A model being moved between cloud regions","A model being retrained with new data","A model being copied to another account"], correct:"A model's performance degrading over time because the data or environment it operates in has changed", exp:"Drift means the real world no longer matches what the model learned."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"Why do AI solutions require ongoing monitoring and updates?", opts:["To detect and remediate model drift and performance changes over time","To increase the number of parameters automatically","Because AI models never change once deployed","To comply with a once-only audit"], correct:"To detect and remediate model drift and performance changes over time", exp:"Continuous monitoring catches drift, bias, and quality degradation so the system stays reliable."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"What is shadow AI?", opts:["AI tools used by employees without organizational approval, oversight, or IT governance","AI systems running in the cloud at night","AI models trained on internal data only","A type of AI that mimics employee handwriting"], correct:"AI tools used by employees without organizational approval, oversight, or IT governance", exp:"Shadow AI creates security, compliance, and data-leakage risks outside governance."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"How can an organization mitigate shadow AI risks?", opts:["Establish transparent classification of AI tools as approved, blocked, or under evaluation","Ban all external tools without providing alternatives","Ignore employee usage of public AI tools","Rely solely on end-user discretion"], correct:"Establish transparent classification of AI tools as approved, blocked, or under evaluation", exp:"Clear tool classification, plus guidance and sanctioned alternatives, reduces shadow AI."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"What is a basic principle of prompt engineering?", opts:["Provide clear, specific, and unambiguous instructions to guide the model toward the desired output","Keep prompts as vague as possible to encourage creativity","Never include examples in a prompt","Use only one-word prompts"], correct:"Provide clear, specific, and unambiguous instructions to guide the model toward the desired output", exp:"Well-crafted prompts with context and constraints steer output quality."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"Adding relevant examples or context to a prompt is most likely to:", opts:["Improve the relevance and accuracy of the model's response","Have no effect on the response","Guarantee 100% factual accuracy","Slow the model down permanently"], correct:"Improve the relevance and accuracy of the model's response", exp:"Context and examples (few-shot) help the model infer the desired behavior."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"What happens when a prompt exceeds the model's token limit?", opts:["The request may be truncated, fail, or be rejected because it exceeds the context window","The model automatically expands its context window","The output becomes more accurate","Tokens are compressed losslessly with no effect"], correct:"The request may be truncated, fail, or be rejected because it exceeds the context window", exp:"Token limits bound how much text the model can consider at once."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"Why do context window constraints matter for GenAI system performance?", opts:["They limit how much information the model can consider, affecting accuracy on long documents or conversations","They only affect billing, never quality","They increase the model's training speed","They are irrelevant to system design"], correct:"They limit how much information the model can consider, affecting accuracy on long documents or conversations", exp:"Long inputs may exceed the window, forcing truncation that loses critical context."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"What does RAG (Retrieval-Augmented Generation) primarily do?", opts:["Retrieves relevant external data and adds it to the prompt so the model's answer is grounded in that data","Retrains the model from scratch on new data","Compresses the model to reduce size","Encrypts all model outputs"], correct:"Retrieves relevant external data and adds it to the prompt so the model's answer is grounded in that data", exp:"RAG grounds responses in retrieved, up-to-date data without retraining the model."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"When is RAG generally preferable to fine-tuning?", opts:["When the answer needs current or proprietary information and the model should reference source data at runtime","When the model must permanently learn a brand-new style across all future requests","When no external data is available","When you need to change the model's core vocabulary permanently"], correct:"When the answer needs current or proprietary information and the model should reference source data at runtime", exp:"RAG is great for dynamic/private data; fine-tuning is better for consistent behavioral change."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"When is fine-tuning generally the better model adaptation choice?", opts:["When the model must adopt a consistent, specialized style or domain behavior across many requests","When answers must reflect real-time data from a database","When you have no labeled data","When you want the fastest possible implementation with no training"], correct:"When the model must adopt a consistent, specialized style or domain behavior across many requests", exp:"Fine-tuning permanently adapts weights for consistent specialization, at higher cost."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"What is an embedding?", opts:["A numerical vector representation that captures the semantic meaning of data for similarity search","A compressed image file format","A database index for text","A model hyperparameter"], correct:"A numerical vector representation that captures the semantic meaning of data for similarity search", exp:"Embeddings map text/images into vector space where similar meanings are close together."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"A foundation model (FM) is best described as:", opts:["A large model pretrained on broad data that can be adapted to many downstream tasks","A model trained from scratch for a single narrow task only","A rule-based expert system","A database schema for model storage"], correct:"A large model pretrained on broad data that can be adapted to many downstream tasks", exp:"Foundation models are pretrained at scale and adapted via prompting or fine-tuning."},
+  {d:"Domain 1: AI Fundamentals and Literacy", q:"Which statements correctly distinguish AI, ML, and GenAI? (Select all that apply)", opts:["ML is a subset of AI","GenAI is a subset of AI focused on creating new content","AI refers to the broad field of building systems that perform human-like intelligent tasks","ML and GenAI are completely unrelated fields with no overlap"], multi:true, correct:["ML is a subset of AI","GenAI is a subset of AI focused on creating new content","AI refers to the broad field of building systems that perform human-like intelligent tasks"], exp:"AI is the umbrella; ML learns from data; GenAI creates new content."},
+
+  // ---------------- DOMAIN 2: AI Strategy and Business Value Creation (36) ----------------
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"When identifying high-impact AI use cases across business functions, you should first:", opts:["Map AI capabilities to specific, measurable business outcomes for each function","Choose the most technically interesting use case regardless of business value","Select tools before defining the problem","Copy use cases from competitors without analysis"], correct:"Map AI capabilities to specific, measurable business outcomes for each function", exp:"Use cases should start from business outcomes, not from technology."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"Which is an example of mapping AI capabilities to a business outcome?", opts:["Using an AI assistant to reduce customer support resolution time","Buying GPUs because they are popular","Hiring more developers before defining a problem","Adopting AI solely because a competitor did"], correct:"Using an AI assistant to reduce customer support resolution time", exp:"A concrete capability (AI assistant) is tied to a measurable outcome (faster resolution)."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"What factors should inform a build-buy-partner decision for AI?", opts:["Budget, timelines, in-house capabilities, vendor proposals, and regulatory compliance requirements","Only the technical team's preferences","The number of GPUs owned","Which vendor offers the lowest marketing budget"], correct:"Budget, timelines, in-house capabilities, vendor proposals, and regulatory compliance requirements", exp:"Build-buy-partner decisions weigh cost, speed, capability, and compliance."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"When is building a custom AI solution typically justified?", opts:["When the capability is core to your business and offers differentiation that off-the-shelf tools cannot provide","When a standard off-the-shelf product already meets every requirement","When you have no data or technical capability","When speed to market is the only priority and budget is unlimited"], correct:"When the capability is core to your business and offers differentiation that off-the-shelf tools cannot provide", exp:"Custom builds make sense for proprietary, differentiating capabilities."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"When is buying or partnering for AI more appropriate than building?", opts:["When a proven solution exists and speed, cost, or capability gaps favor adopting it","When the use case is the company's unique competitive advantage","When you must keep all model internals proprietary","When no vendor can meet basic requirements"], correct:"When a proven solution exists and speed, cost, or capability gaps favor adopting it", exp:"Buy/partner accelerates delivery when a fit-for-purpose solution exists."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"During prioritization, which decision options apply to AI initiatives?", opts:["Scale, pause, or terminate an initiative based on value, feasibility, and strategic alignment","Always scale every initiative regardless of results","Only terminate initiatives with visible technology failures","Pause all initiatives indefinitely"], correct:"Scale, pause, or terminate an initiative based on value, feasibility, and strategic alignment", exp:"Portfolio management treats AI initiatives as investments to scale, pause, or stop."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"What criteria are used to prioritize AI initiatives?", opts:["Business value, feasibility, sustainability, and strategic alignment","The novelty of the underlying algorithm","The number of engineers available","Which initiative is cheapest regardless of value"], correct:"Business value, feasibility, sustainability, and strategic alignment", exp:"Prioritization balances expected value against practicality and strategy."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"When is AI NOT the appropriate solution for a business problem?", opts:["When a simple deterministic rule or existing software solves the problem accurately at lower cost","When the problem involves large amounts of unstructured text","When outcomes are difficult to predict with fixed rules","When the task requires handling ambiguity"], correct:"When a simple deterministic rule or existing software solves the problem accurately at lower cost", exp:"AI adds value for complex patterns; simple problems may not need it."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"What is a key business continuity consideration when transitioning a process to AI?", opts:["Ensuring fallback plans and manual procedures exist if the AI system fails or degrades","Deleting the previous process documentation","Removing all human involvement immediately","Ignoring system dependencies"], correct:"Ensuring fallback plans and manual procedures exist if the AI system fails or degrades", exp:"Business continuity requires contingencies while AI handles the workload."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"How should cost implications be considered when transitioning to AI?", opts:["Evaluate total cost of ownership, including training, inference, integration, and maintenance","Only consider the initial software purchase","Ignore ongoing compute costs","Assume AI is always cheaper than any alternative"], correct:"Evaluate total cost of ownership, including training, inference, integration, and maintenance", exp:"Full lifecycle cost, not just sticker price, determines value."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"Why is data readiness a key consideration before transitioning a process to AI?", opts:["AI outcomes depend on having accessible, high-quality, relevant data for the task","Data readiness only matters for databases","AI models work with any data regardless of quality","Data is only needed after deployment"], correct:"AI outcomes depend on having accessible, high-quality, relevant data for the task", exp:"Without the right data, an AI transition will underperform regardless of the model."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"Which is an example of a tangible KPI for an AI initiative?", opts:["Percentage reduction in cost per transaction","Improved employee morale","Higher brand perception","Increased innovation culture"], correct:"Percentage reduction in cost per transaction", exp:"Tangible KPIs are directly measurable in financial or operational terms."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"Which is an example of an intangible benefit used in AI KPIs?", opts:["Increased customer satisfaction","Reduction in operational costs","Revenue growth from new products","Time saved per employee"], correct:"Increased customer satisfaction", exp:"Intangible benefits like satisfaction and culture are harder to measure directly."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"Why should baseline metrics be established before implementing an AI solution?", opts:["To accurately measure the effect of AI by comparing performance before and after","To satisfy the marketing department","Because baselines are required by law","To make the current process run slower"], correct:"To accurately measure the effect of AI by comparing performance before and after", exp:"Without a baseline you cannot demonstrate improvement attributable to AI."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"A baseline metric is:", opts:["The pre-AI measurement of current performance used as a comparison point","The final target the AI must beat","A metric used only after deployment","A randomly chosen number"], correct:"The pre-AI measurement of current performance used as a comparison point", exp:"Baselines are the 'before' snapshot for evaluating AI impact."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"What does an ROI framework for AI typically consider?", opts:["Time savings, cost reduction, revenue growth, and productivity gains against investment","Only the number of models deployed","Only software licensing fees","Employee headcount in isolation"], correct:"Time savings, cost reduction, revenue growth, and productivity gains against investment", exp:"ROI compares monetized benefits to total investment over the lifecycle."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"How is time savings monetized in an AI ROI calculation?", opts:["Multiply hours saved by the loaded cost of the resource whose time is freed","Count hours saved as intangible goodwill only","Assume time savings never have financial value","Subtract hours from revenue directly"], correct:"Multiply hours saved by the loaded cost of the resource whose time is freed", exp:"Time savings become value when they are converted to productive work or cost avoidance."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"Which combination best demonstrates a positive ROI for an AI initiative?", opts:["Reduced costs and increased revenue exceeding the total investment","Lower costs but no measurable benefit","Higher revenue with no tracking of investment","Decreased productivity with savings in compute"], correct:"Reduced costs and increased revenue exceeding the total investment", exp:"ROI is positive when net benefits exceed total costs."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"What are leading indicators that predict AI project success?", opts:["Early adoption signals such as user engagement, pilot throughput, and model quality metrics before full rollout","Final revenue results reported after a full year","Hardware utilization alone","The number of press releases about the project"], correct:"Early adoption signals such as user engagement, pilot throughput, and model quality metrics before full rollout", exp:"Leading indicators give early warning of whether an AI initiative will succeed."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"Basic cost controls for AI implementations include:", opts:["Setting budgets, monitoring usage, and right-sizing models and compute to match demand","Buying the largest model regardless of need","Avoiding any cost tracking","Disabling all logging to save money"], correct:"Setting budgets, monitoring usage, and right-sizing models and compute to match demand", exp:"Cost planning and optimization keep AI spend aligned with value."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"What is the purpose of AWS Savings Plans in an AI cost strategy?", opts:["Commit to consistent usage in exchange for lower prices on eligible compute","Eliminate all compute costs","Provide unlimited free usage","Replace the need for capacity planning"], correct:"Commit to consistent usage in exchange for lower prices on eligible compute", exp:"Savings Plans reduce cost for predictable, steady-state compute usage."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"AWS Pricing Calculator is used to:", opts:["Estimate the cost of planned AWS services before committing to a solution","Store financial audit records","Generate revenue forecasts automatically","Manage employee payroll"], correct:"Estimate the cost of planned AWS services before committing to a solution", exp:"The calculator supports business case and ROI development by estimating spend."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"AWS Cost Explorer helps you:", opts:["Visualize and analyze historical cost and usage data to identify optimization opportunities","Train foundation models","Encrypt stored data","Provision new accounts"], correct:"Visualize and analyze historical cost and usage data to identify optimization opportunities", exp:"Cost Explorer supports cost monitoring and optimization decisions."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"How does AWS Marketplace support build-buy-partner decisions?", opts:["It provides a catalog of third-party software and AI solutions to evaluate for buy/partner options","It only sells AWS hardware","It is a forum for community discussions","It automates fine-tuning of models"], correct:"It provides a catalog of third-party software and AI solutions to evaluate for buy/partner options", exp:"Marketplace lets teams compare vetted solutions against building in-house."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"Consumption-based AI pricing means:", opts:["You pay based on actual usage, such as tokens or requests consumed","You pay a flat fee regardless of usage","You pay only for hardware you own","You never pay for inference"], correct:"You pay based on actual usage, such as tokens or requests consumed", exp:"Consumption pricing aligns cost with demand but can be unpredictable at scale."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"Seat-based AI pricing means:", opts:["You pay a fixed fee per licensed user of the AI tool","You pay per token generated","You pay per gigabyte stored","You pay only for GPU hours"], correct:"You pay a fixed fee per licensed user of the AI tool", exp:"Seat-based pricing is common for AI assistants licensed per employee."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"Instance-based AI pricing means:", opts:["You pay for dedicated compute instances you provision and run","You pay per individual token","You pay per end-user seat","You pay a flat enterprise subscription only"], correct:"You pay for dedicated compute instances you provision and run", exp:"Instance-based pricing gives reserved capacity for consistent, predictable workloads."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"Assessing the competitive landscape for AI adoption involves:", opts:["Understanding competitors' AI capabilities and how AI shifts market dynamics and opportunities","Copying every competitor feature without analysis","Ignoring industry trends entirely","Only looking at your internal costs"], correct:"Understanding competitors' AI capabilities and how AI shifts market dynamics and opportunities", exp:"Competitive analysis reveals where AI creates advantage or risk of falling behind."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"What is a potential advantage of early AI adoption in a competitive market?", opts:["Building capabilities and data advantages before competitors catch up","Guaranteeing immediate profits","Eliminating the need for any other strategy","Avoiding all costs"], correct:"Building capabilities and data advantages before competitors catch up", exp:"First-movers can accumulate proprietary data and operational learning."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"How can AI transform an existing business model?", opts:["Enabling new revenue streams, such as productizing AI capabilities or changing how value is delivered","Keeping the exact same model with no changes","Reducing the business to a single manual process","Replacing customer-facing services with none"], correct:"Enabling new revenue streams, such as productizing AI capabilities or changing how value is delivered", exp:"AI can shift a business from selling products to selling outcomes or insights."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"How does AI create a sustainable competitive advantage?", opts:["By continuously improving on proprietary data, processes, and integration that rivals find hard to replicate","By being a feature any competitor can copy instantly","By requiring no ongoing investment","By working only in offline mode"], correct:"By continuously improving on proprietary data, processes, and integration that rivals find hard to replicate", exp:"Sustainable advantage comes from compounding data and operational moats, not a single model."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"Which is an operational improvement enabled by AI?", opts:["Automating repetitive tasks and reducing error rates in business processes","Increasing manual paperwork","Lengthening cycle times","Removing analytics entirely"], correct:"Automating repetitive tasks and reducing error rates in business processes", exp:"AI improves efficiency, quality, and speed across operations."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"How should AI investment levels vary by industry maturity?", opts:["More established, AI-mature industries may invest in deeper optimization, while emerging industries may invest in experimentation and foundational capability","All industries should invest exactly the same amount","Less mature industries should never invest in AI","Only mature industries can use AI at all"], correct:"More established, AI-mature industries may invest in deeper optimization, while emerging industries may invest in experimentation and foundational capability", exp:"Investment aligns with maturity: build foundations first, optimize later."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"When competitive dynamics are intense, AI investment decisions should:", opts:["Balance urgency to keep pace with competitors against evidence of real business value","Match the largest competitor's spending blindly","Defer all AI investment indefinitely","Invest only after competitors stop investing"], correct:"Balance urgency to keep pace with competitors against evidence of real business value", exp:"Intense competition raises urgency but investment still needs a value case."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"Which are examples of tangible KPIs for an AI initiative? (Select all that apply)", opts:["Reduction in operating cost per unit","Increase in revenue from AI-assisted sales","Percent reduction in error rates","Improved employee engagement scores"], multi:true, correct:["Reduction in operating cost per unit","Increase in revenue from AI-assisted sales","Percent reduction in error rates"], exp:"Tangible KPIs are directly measurable in cost, revenue, or operational terms."},
+  {d:"Domain 2: AI Strategy and Business Value Creation", q:"Which factors should be considered in a build-buy-partner decision? (Select all that apply)", opts:["Budget and cost constraints","Timelines and speed to market","In-house technical capabilities","Regulatory and compliance requirements"], multi:true, correct:["Budget and cost constraints","Timelines and speed to market","In-house technical capabilities","Regulatory and compliance requirements"], exp:"All four shape whether to build, buy, or partner for an AI capability."},
+
+  // ---------------- DOMAIN 3: AI Governance and Responsible AI Leadership (31) ----------------
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Fairness in responsible AI means:", opts:["Ensuring models do not systematically disadvantage particular groups of people","Ensuring all users get identical prompts","Guaranteeing every prediction is the same","Maximizing model speed"], correct:"Ensuring models do not systematically disadvantage particular groups of people", exp:"Fairness seeks to avoid discriminatory outcomes across demographic groups."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Explainability in AI refers to:", opts:["The ability to describe how or why a model arrived at a decision","The speed at which a model responds","The number of parameters in the model","The cost of running the model"], correct:"The ability to describe how or why a model arrived at a decision", exp:"Explainability helps stakeholders understand, trust, and audit model decisions."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Privacy as a responsible AI dimension means:", opts:["Protecting personal data used in AI systems and respecting individuals' data rights","Storing data in as many places as possible","Publishing all training data publicly","Removing all access controls"], correct:"Protecting personal data used in AI systems and respecting individuals' data rights", exp:"Privacy spans data collection, use, retention, and consent."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Safety in responsible AI means:", opts:["Designing systems to avoid harmful, unsafe, or dangerous outcomes for people","Making the model run as fast as possible","Ensuring the model never changes","Removing all monitoring"], correct:"Designing systems to avoid harmful, unsafe, or dangerous outcomes for people", exp:"Safety covers avoiding harmful content, unsafe actions, and misuse."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Transparency in AI systems means:", opts:["Being clear about how AI is used and communicating its capabilities and limitations","Hiding technical details from all users","Guaranteeing 100% accuracy","Removing all documentation"], correct:"Being clear about how AI is used and communicating its capabilities and limitations", exp:"Transparency builds trust and supports informed decision-making."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Robustness in responsible AI means:", opts:["The system maintains performance under varied, noisy, or adversarial inputs","The system only works on perfect data","The model never produces errors","The system is physically durable"], correct:"The system maintains performance under varied, noisy, or adversarial inputs", exp:"Robust systems resist degradation from edge cases and attacks."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"When business objectives conflict with responsible AI principles, the right approach is:", opts:["Make a documented tradeoff decision that weighs risk, stakeholder impact, and mitigations","Always prioritize speed over responsibility","Silently compromise on safety to save cost","Avoid discussing the tradeoff"], correct:"Make a documented tradeoff decision that weighs risk, stakeholder impact, and mitigations", exp:"Responsible AI requires deliberate, transparent tradeoff analysis, not silent shortcuts."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Governance by design means:", opts:["Integrating responsible AI considerations into project planning from the start, not as an afterthought","Adding governance only after deployment","Applying governance only to failed projects","Using governance to block all innovation"], correct:"Integrating responsible AI considerations into project planning from the start, not as an afterthought", exp:"Early integration is cheaper and more effective than retrofitting governance."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"When do AI systems most clearly require human oversight?", opts:["When decisions are high-stakes, regulated, or have significant consequences for people","When the task is trivial and reversible","When the model is highly accurate on training data","When no users are affected"], correct:"When decisions are high-stakes, regulated, or have significant consequences for people", exp:"Human oversight is required where errors could cause real harm."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"What safeguards help detect hallucinations in generative AI?", opts:["Grounding via RAG, human review, and automated consistency checks against source data","Increasing the model's temperature","Removing all system prompts","Disabling logging"], correct:"Grounding via RAG, human review, and automated consistency checks against source data", exp:"Hallucination detection relies on grounding and verification against reliable sources."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Guardrails for AI systems are used to:", opts:["Block harmful content, restrict topics, and filter sensitive data at runtime","Speed up model training","Increase the context window","Automatically retrain the model"], correct:"Block harmful content, restrict topics, and filter sensitive data at runtime", exp:"Guardrails enforce content and safety policies on model input and output."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Escalation criteria in AI governance define:", opts:["The conditions under which a human must review or override an AI decision","The cost thresholds for buying GPUs","The maximum number of daily requests","The training schedule for models"], correct:"The conditions under which a human must review or override an AI decision", exp:"Clear escalation triggers route high-risk outputs to human oversight."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Effective AI governance structures should include:", opts:["Cross-functional representation with clear accountability for AI decisions","A single technical team operating in isolation","No formal ownership or decision rights","Only legal and compliance staff"], correct:"Cross-functional representation with clear accountability for AI decisions", exp:"Diverse governance (business, technical, legal, compliance) with clear ownership is essential."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Why is clear accountability important in AI governance?", opts:["So roles, responsibilities, and decision rights for AI are explicit and enforceable","So no one can be held responsible for outcomes","To reduce the number of stakeholders involved","To eliminate documentation"], correct:"So roles, responsibilities, and decision rights for AI are explicit and enforceable", exp:"Accountability prevents gaps and ensures someone owns risk and outcomes."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"How should regulatory compliance risks for AI be addressed?", opts:["Identify applicable regulations early and design processes that comply from the start","Ignore regulations until an audit fails","Assume AI is exempt from all regulations","Delegate compliance entirely to vendors"], correct:"Identify applicable regulations early and design processes that comply from the start", exp:"Proactive compliance mapping avoids costly rework and penalties."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Appropriate access controls for AI systems should:", opts:["Restrict access based on role and least privilege to protect data and prevent misuse","Give every employee full access","Allow public access by default","Disable authentication entirely"], correct:"Restrict access based on role and least privilege to protect data and prevent misuse", exp:"Least-privilege access reduces the blast radius of misuse or compromise."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Data security measures for AI systems include:", opts:["Encryption, access controls, and protection of training and inference data","Publishing all data openly","Disabling encryption to reduce latency","Storing data without any oversight"], correct:"Encryption, access controls, and protection of training and inference data", exp:"AI data, including prompts and outputs, must be secured like any sensitive asset."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"AI risk classification frameworks help organizations:", opts:["Prioritize governance and compliance by classifying AI use cases by risk level","Guarantee zero risk for all AI","Eliminate the need for monitoring","Classify employees by performance"], correct:"Prioritize governance and compliance by classifying AI use cases by risk level", exp:"High-risk uses get stricter governance; low-risk uses get lighter oversight."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Why are risk controls and monitoring needed for AI systems in production?", opts:["To detect degradation, misuse, and unexpected behavior after deployment","Because models never need attention once live","To satisfy curiosity only","To slow down the system deliberately"], correct:"To detect degradation, misuse, and unexpected behavior after deployment", exp:"Production AI needs continuous risk monitoring, not just launch-time checks."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Which practice best exemplifies governance by design for a new AI project?", opts:["Including responsible AI review, risk classification, and guardrails in the project's initial planning phase","Adding governance documentation only after the system is in production","Deferring all compliance questions until the launch date","Letting each team decide governance independently at the end"], correct:"Including responsible AI review, risk classification, and guardrails in the project's initial planning phase", exp:"Governance by design bakes responsibility into planning, not retrofits it later."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Bias can enter an AI system:", opts:["At multiple stages of the AI lifecycle, from data collection through deployment and monitoring","Only during model deployment","Only in the final user interface","Never after training"], correct:"At multiple stages of the AI lifecycle, from data collection through deployment and monitoring", exp:"Bias can originate in data, labeling, modeling, and monitoring decisions."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Why is ongoing monitoring for bias drift important?", opts:["Because populations and data change over time, and bias can emerge or worsen after deployment","Because bias is fixed forever after launch","Because monitoring is only a compliance checkbox","Because bias only matters before launch"], correct:"Because populations and data change over time, and bias can emerge or worsen after deployment", exp:"Continuous bias monitoring catches drift that emerges in production."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"How should harmful content risks be managed?", opts:["Use content filters, guardrails, and moderation to prevent generating or amplifying harmful material","Allow all content and review later","Rely on end users to self-moderate","Disable all filtering for performance"], correct:"Use content filters, guardrails, and moderation to prevent generating or amplifying harmful material", exp:"Proactive content controls limit harmful outputs before they reach users."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Intellectual property (IP) concerns for AI systems include:", opts:["Ensuring training data is used lawfully and outputs do not infringe others' IP","Ignoring licensing terms","Publishing all training data publicly","Deleting model documentation"], correct:"Ensuring training data is used lawfully and outputs do not infringe others' IP", exp:"IP risk spans input data rights and output infringement."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"How can hallucination risk affect system reliability?", opts:["Confidently wrong outputs can mislead users and undermine trust in the system","Hallucinations always improve accuracy","Hallucinations only affect cost, never trust","Hallucinations are impossible to mitigate"], correct:"Confidently wrong outputs can mislead users and undermine trust in the system", exp:"Reliability risk from hallucinations requires grounding and verification."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"How does data quality degradation create reliability risk?", opts:["Incoming data that degrades over time erodes model accuracy and trust in outcomes","Data quality has no effect on reliability","Degraded data only affects storage","Data degradation improves model performance"], correct:"Incoming data that degrades over time erodes model accuracy and trust in outcomes", exp:"Monitoring data quality is part of managing AI reliability."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Which are responsible AI dimensions? (Select all that apply)", opts:["Fairness","Explainability","Transparency","Robustness"], multi:true, correct:["Fairness","Explainability","Transparency","Robustness"], exp:"The six core dimensions include fairness, explainability, privacy, safety, transparency, and robustness."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"In which scenarios is human oversight most critical for an AI system? (Select all that apply)", opts:["Decisions affecting an individual's employment or credit","Regulated medical or safety-critical recommendations","Low-risk, fully reversible content suggestions","Automated decisions with no user impact"], multi:true, correct:["Decisions affecting an individual's employment or credit","Regulated medical or safety-critical recommendations"], exp:"High-stakes and regulated decisions warrant human review; trivial ones do not."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Which groups should be represented in a cross-functional AI governance structure? (Select all that apply)", opts:["Business and product leaders","Technical experts and data scientists","Legal and compliance","Executive sponsors"], multi:true, correct:["Business and product leaders","Technical experts and data scientists","Legal and compliance","Executive sponsors"], exp:"Governance needs business, technical, legal, and executive perspectives."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Which are IP-related risks for AI systems? (Select all that apply)", opts:["Using copyrighted or licensed data without permission","Model outputs reproducing copyrighted content","Employees sharing confidential data with public AI tools","Higher GPU electricity costs"], multi:true, correct:["Using copyrighted or licensed data without permission","Model outputs reproducing copyrighted content","Employees sharing confidential data with public AI tools"], exp:"IP risk spans training-data rights, output infringement, and data leakage."},
+  {d:"Domain 3: AI Governance and Responsible AI Leadership", q:"Which mitigations address AI reliability risks? (Select all that apply)", opts:["Grounding responses with RAG to reduce hallucinations","Monitoring data quality and model drift over time","Human review and escalation for high-risk outputs","Increasing model temperature to maximum"], multi:true, correct:["Grounding responses with RAG to reduce hallucinations","Monitoring data quality and model drift over time","Human review and escalation for high-risk outputs"], exp:"Reliability is managed through grounding, monitoring, and human oversight."},
+
+  // ---------------- DOMAIN 4: Business Readiness, Leadership, and AI Transformation (32) ----------------
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"Assessing business readiness to adopt AI should cover:", opts:["Leadership alignment, data quality, cultural preparedness, technical infrastructure, and governance frameworks","Only the availability of GPUs","Only the number of AI projects already running","Only the marketing budget"], correct:"Leadership alignment, data quality, cultural preparedness, technical infrastructure, and governance frameworks", exp:"Readiness is multidimensional: people, process, technology, and governance."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"Why does leadership alignment matter for AI readiness?", opts:["Executive support secures funding, removes barriers, and sustains momentum for AI initiatives","Leadership alignment has no impact on AI success","Only frontline staff matter for AI","Leaders should delegate all AI decisions"], correct:"Executive support secures funding, removes barriers, and sustains momentum for AI initiatives", exp:"Without executive sponsorship, AI initiatives stall on resources and prioritization."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"Cultural preparedness for AI adoption refers to:", opts:["An organization's openness to change, experimentation, and learning from failure","The design of the office space","The number of AI vendors used","The age of the technology stack"], correct:"An organization's openness to change, experimentation, and learning from failure", exp:"Culture determines whether teams embrace or resist AI-driven change."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"In an AI maturity model, an organization at the 'experimentation' stage is characterized by:", opts:["Running isolated pilots and proofs of concept to explore AI value","Deploying AI across the entire enterprise at scale","Having no AI activity at all","Removing all AI investments"], correct:"Running isolated pilots and proofs of concept to explore AI value", exp:"Experimentation is the early stage of testing AI before enterprise-scale deployment."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"At the 'enterprise-scale deployment' maturity stage, an organization typically:", opts:["Has standardized governance, platforms, and processes enabling AI across multiple business units","Runs only a single isolated pilot","Has banned AI usage","Relies entirely on shadow AI"], correct:"Has standardized governance, platforms, and processes enabling AI across multiple business units", exp:"Enterprise-scale maturity reflects institutionalized, governed AI capability."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"A 'people' capability gap in AI transformation means:", opts:["The workforce lacks the skills and literacy needed to use or support AI","The servers are underpowered","The data is stored in silos","Governance policies are missing"], correct:"The workforce lacks the skills and literacy needed to use or support AI", exp:"People gaps are closed with training, hiring, and literacy programs."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"A 'process' capability gap in AI transformation means:", opts:["Workflows and operating procedures are not adapted to support AI-driven work","Employees lack AI skills","Data quality is poor","Leadership is absent"], correct:"Workflows and operating procedures are not adapted to support AI-driven work", exp:"Process gaps require redesigning how work flows with AI."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"A 'technology' capability gap in AI transformation means:", opts:["The infrastructure and platforms cannot support AI workloads","The culture resists change","Governance is fragmented","The business model is outdated"], correct:"The infrastructure and platforms cannot support AI workloads", exp:"Technology gaps require investments in compute, data, and integration platforms."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"A 'governance' capability gap in AI transformation means:", opts:["There are no clear policies, standards, or oversight for AI use","There is too much AI training","The infrastructure is over-provisioned","Employees are over-skilled"], correct:"There are no clear policies, standards, or oversight for AI use", exp:"Governance gaps leave AI adoption exposed to risk and inconsistency."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"How should development investments be prioritized for AI?", opts:["Align investments with strategic objectives and the organization's current maturity level","Invest in every idea equally","Prioritize only the cheapest projects","Avoid investing until fully mature"], correct:"Align investments with strategic objectives and the organization's current maturity level", exp:"Progression pathways prioritize foundational capability before advanced use."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"Data readiness for AI includes:", opts:["Data quality, accessibility, and the ability to use data safely and lawfully","Only the volume of data","Only the number of databases","The number of data scientists"], correct:"Data quality, accessibility, and the ability to use data safely and lawfully", exp:"Ready data is high-quality, accessible, and governable for AI use."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"How do data silos affect AI initiatives?", opts:["They fragment data across systems, limiting the complete, connected view AI needs to deliver value","They speed up AI training","They improve data quality automatically","They have no effect on AI"], correct:"They fragment data across systems, limiting the complete, connected view AI needs to deliver value", exp:"Breaking silos enables the unified data AI depends on."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"Why do data strategy and data ownership matter for AI?", opts:["Clear ownership ensures data is governed, maintained, and available for AI use","Ownership only matters for marketing","Data strategy is irrelevant to AI","Ownership guarantees model accuracy"], correct:"Clear ownership ensures data is governed, maintained, and available for AI use", exp:"Accountability for data quality and access underpins trustworthy AI."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"Data sharing frameworks support AI by:", opts:["Enabling governed, secure sharing of data across teams and partners to enrich AI models","Removing all data access controls","Publishing all data publicly","Blocking internal data exchange"], correct:"Enabling governed, secure sharing of data across teams and partners to enrich AI models", exp:"Controlled sharing expands the data available while respecting governance."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"Assessing infrastructure requirements for AI should focus on:", opts:["Whether compute, storage, networking, and platforms can support AI workloads at the needed scale","The color of the data center walls","The number of monitors in the office","The brand of office furniture"], correct:"Whether compute, storage, networking, and platforms can support AI workloads at the needed scale", exp:"Infrastructure must be right-sized for training, inference, and integration."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"What does executive sponsorship provide for AI initiatives?", opts:["Funding, authority, and sustained attention that keep AI initiatives resourced and prioritized","A guarantee of success","Replacement of all team members","Elimination of all risks"], correct:"Funding, authority, and sustained attention that keep AI initiatives resourced and prioritized", exp:"Executive sponsors unblock resources and maintain organizational focus."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"Why are AI champions valuable?", opts:["They advocate for AI, build support, and sustain momentum across the organization","They replace executive leadership","They are the only ones who test AI","They prevent any AI adoption"], correct:"They advocate for AI, build support, and sustain momentum across the organization", exp:"Champions drive grassroots adoption and reinforce leadership messaging."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"Cross-functional AI teams should include:", opts:["Business leads, technical experts, legal, and compliance to cover all angles of an initiative","Only software engineers","Only marketing staff","Only external consultants"], correct:"Business leads, technical experts, legal, and compliance to cover all angles of an initiative", exp:"Diverse expertise prevents blind spots in AI projects."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"Assigning clear accountability standards for AI initiatives means:", opts:["Defining who owns outcomes, decisions, and risks for each initiative","Leaving ownership ambiguous","Letting every team operate independently with no owners","Blaming only vendors for failures"], correct:"Defining who owns outcomes, decisions, and risks for each initiative", exp:"Clear ownership ensures initiative success and risk are someone's responsibility."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"Transparent communication about AI should address:", opts:["Implementation timelines, outcome expectations, and effects on workforce roles","Only positive news, hiding all risks","Technical details that confuse employees","Nothing until AI is fully deployed"], correct:"Implementation timelines, outcome expectations, and effects on workforce roles", exp:"Honest communication builds trust and reduces fear about AI change."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"Common cultural barriers to AI adoption include:", opts:["Risk aversion, resistance to change, and fear of failure","Excessive experimentation","Too much executive support","Overly fast decision-making"], correct:"Risk aversion, resistance to change, and fear of failure", exp:"Culture often slows adoption more than technology does."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"What leadership interventions address cultural barriers to AI adoption?", opts:["Modeling experimentation, rewarding learning, and communicating a clear vision for change","Ignoring employee concerns","Punishing failed experiments","Forcing AI adoption without communication"], correct:"Modeling experimentation, rewarding learning, and communicating a clear vision for change", exp:"Leaders shape culture by example and by reframing failure as learning."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"POC (proof of concept) programs help accelerate AI literacy by:", opts:["Giving teams hands-on, low-risk experience with AI in real business settings","Replacing all training courses","Guaranteeing production deployment","Eliminating the need for sponsorship"], correct:"Giving teams hands-on, low-risk experience with AI in real business settings", exp:"POCs build confidence and evidence before larger commitments."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"Hackathons support AI adoption by:", opts:["Fostering experimentation and surfacing promising AI ideas from across the workforce","Replacing production systems","Reducing the need for governance","Discouraging cross-team collaboration"], correct:"Fostering experimentation and surfacing promising AI ideas from across the workforce", exp:"Hackathons generate ideas and momentum in a contained, low-risk format."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"AI workforce training programs should include:", opts:["AI literacy for all employees plus responsible AI training for those building or deploying AI","Training only senior executives","No training at all","Training only for new hires"], correct:"AI literacy for all employees plus responsible AI training for those building or deploying AI", exp:"Broad literacy plus role-specific responsible AI training builds capability safely."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"A strategic shift in human roles with AI involves:", opts:["Transitioning people from manual operations to oversight and collaboration with AI systems","Replacing all employees with automation","Eliminating the need for human judgment","Freezing all job descriptions"], correct:"Transitioning people from manual operations to oversight and collaboration with AI systems", exp:"AI shifts humans toward supervision, exception handling, and judgment."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"When balancing human strengths with AI capabilities, which human qualities are most valuable?", opts:["Critical thinking, empathy, and creativity","Speed of repetitive data entry","Memory of every transaction","Consistency of manual keystrokes"], correct:"Critical thinking, empathy, and creativity", exp:"Humans excel where judgment, relationships, and creativity matter; AI handles scale and repetition."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"The iterative transformation phases in AWS guidance are:", opts:["Envision, experiment, launch, and scale","Plan, cancel, plan again","Buy, build, buy again","Design, ignore, delete"], correct:"Envision, experiment, launch, and scale", exp:"The envision-experiment-launch-scale cycle drives iterative AI transformation."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"Scaling AI should start with:", opts:["Short-term wins that build evidence and momentum before expanding enterprise-wide","Immediately replacing all core systems in one step","Avoiding any measurable outcome","Deploying to every user on day one"], correct:"Short-term wins that build evidence and momentum before expanding enterprise-wide", exp:"Incremental scaling reduces risk and proves value before broad rollout."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"AI centers of excellence (COEs) support scaling by:", opts:["Centralizing expertise, standards, and reusable patterns to help teams deploy AI faster","Eliminating all governance","Slowing down AI adoption","Siloing AI knowledge in one team"], correct:"Centralizing expertise, standards, and reusable patterns to help teams deploy AI faster", exp:"COEs share learnings and platforms so the whole enterprise scales efficiently."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"Continuous feedback mechanisms for AI scaling ensure:", opts:["Success metrics are tracked and lessons are fed back to improve initiatives over time","Projects are never reviewed again","Feedback is only collected once a year","Metrics are kept secret"], correct:"Success metrics are tracked and lessons are fed back to improve initiatives over time", exp:"Ongoing feedback and metric tracking sustain long-term AI value."},
+  {d:"Domain 4: Business Readiness, Leadership, and AI Transformation", q:"Which factors should be addressed when moving an AI initiative from experimental to production-grade? (Select all that apply)", opts:["Governance and risk controls","Operational monitoring and support","Scalability and cost management","Enterprise security and compliance"], multi:true, correct:["Governance and risk controls","Operational monitoring and support","Scalability and cost management","Enterprise security and compliance"], exp:"Production-grade AI requires governance, operations, scale, and security."}
+];
+
+let quizQuestions = [];
+let userAnswers = [];
+let currentIndex = 0;
+
+const STORAGE_KEY = "cert-reviewer:" + location.pathname;
+
+function normalizeAnswer(q, raw) {
+  if (q.multi) {
+    if (Array.isArray(raw)) return raw.slice().sort();
+    return null;
+  }
+  return (typeof raw === "string") ? raw : null;
+}
+
+function answersEqual(a, b) {
+  if (!Array.isArray(a) || !Array.isArray(b)) return false;
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
+}
+
+function saveState(phase) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      v: 1,
+      phase: phase,
+      currentIndex: currentIndex,
+      userAnswers: userAnswers,
+      quizQuestions: quizQuestions
+    }));
+  } catch (e) {}
+}
+
+function loadState() {
+  try {
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (!data || data.v !== 1) return null;
+    if (data.phase !== "quiz" && data.phase !== "result") return null;
+    if (!Array.isArray(data.quizQuestions) || data.quizQuestions.length !== QUESTIONS.length) return null;
+    if (!Array.isArray(data.userAnswers) || data.userAnswers.length !== data.quizQuestions.length) return null;
+    if (typeof data.currentIndex !== "number" || data.currentIndex < 0 || data.currentIndex >= data.quizQuestions.length) return null;
+    const valid = data.quizQuestions.every((q, i) => {
+      if (!q || !Array.isArray(q.opts) || typeof q.correct === "undefined") return false;
+      if (q.multi) {
+        if (!Array.isArray(q.correct) || q.correct.length === 0) return false;
+        if (!q.correct.every(c => q.opts.includes(c))) return false;
+        const a = data.userAnswers[i];
+        return a === null || (Array.isArray(a) && a.every(x => q.opts.includes(x)));
+      }
+      if (typeof q.correct !== "string" || !q.opts.includes(q.correct)) return false;
+      const a = data.userAnswers[i];
+      return a === null || (typeof a === "string" && q.opts.includes(a));
+    });
+    if (!valid) return null;
+    return data;
+  } catch (e) {
+    return null;
+  }
+}
+
+function clearState() {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (e) {}
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz() {
+  clearState();
+  quizQuestions = shuffle(QUESTIONS).map(q => ({
+    d: q.d,
+    q: q.q,
+    exp: q.exp,
+    multi: !!q.multi,
+    correct: q.correct,
+    opts: shuffle(q.opts)
+  }));
+  userAnswers = new Array(quizQuestions.length).fill(null);
+  currentIndex = 0;
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  buildPalette();
+  renderQuestion();
+  saveState("quiz");
+}
+
+function buildPalette() {
+  const palette = document.getElementById('palette');
+  palette.innerHTML = '';
+  quizQuestions.forEach((_, i) => {
+    const btn = document.createElement('button');
+    btn.textContent = i + 1;
+    btn.onclick = () => { currentIndex = i; renderQuestion(); saveState("quiz"); };
+    btn.id = 'palette-btn-' + i;
+    palette.appendChild(btn);
+  });
+}
+
+function updatePalette() {
+  quizQuestions.forEach((_, i) => {
+    const btn = document.getElementById('palette-btn-' + i);
+    btn.classList.toggle('answered', userAnswers[i] !== null);
+    btn.classList.toggle('current', i === currentIndex);
+  });
+}
+
+function renderQuestion() {
+  const total = quizQuestions.length;
+  const q = quizQuestions[currentIndex];
+  document.getElementById('progress-label').textContent = 'Question ' + (currentIndex + 1) + ' of ' + total;
+  const answeredCount = userAnswers.filter(a => a !== null).length;
+  document.getElementById('answered-label').textContent = answeredCount + ' answered';
+  document.getElementById('progress-fill').style.width = Math.round(((currentIndex + 1) / total) * 100) + '%';
+  document.getElementById('domain-tag').textContent = q.d;
+  const multiTag = document.getElementById('multi-tag');
+  multiTag.style.display = q.multi ? 'inline-block' : 'none';
+  document.getElementById('question-text').textContent = (currentIndex + 1) + '. ' + q.q;
+
+  const optionsDiv = document.getElementById('options');
+  optionsDiv.innerHTML = '';
+  const cur = userAnswers[currentIndex];
+
+  q.opts.forEach((opt, i) => {
+    const label = document.createElement('label');
+    const isChecked = q.multi ? (Array.isArray(cur) && cur.includes(opt)) : (cur === opt);
+    label.className = 'option' + (isChecked ? ' selected' : '');
+    const inputType = q.multi ? 'checkbox' : 'radio';
+    label.innerHTML = '<input type="' + inputType + '" name="opt" ' + (isChecked ? 'checked' : '') + '><span></span>';
+    label.querySelector('span').textContent = opt;
+    label.onclick = () => {
+      if (q.multi) {
+        let arr = Array.isArray(userAnswers[currentIndex]) ? userAnswers[currentIndex].slice() : [];
+        if (arr.includes(opt)) {
+          arr = arr.filter(x => x !== opt);
+        } else {
+          arr.push(opt);
+        }
+        userAnswers[currentIndex] = arr.length > 0 ? arr : null;
+      } else {
+        userAnswers[currentIndex] = opt;
+      }
+      renderQuestion();
+      saveState("quiz");
+    };
+    optionsDiv.appendChild(label);
+  });
+
+  document.getElementById('prev-btn').disabled = currentIndex === 0;
+  const isLast = currentIndex === total - 1;
+  document.getElementById('next-btn').style.display = isLast ? 'none' : 'inline-block';
+  document.getElementById('finish-btn').style.display = isLast ? 'inline-block' : 'none';
+
+  updatePalette();
+}
+
+function nextQuestion() {
+  if (currentIndex < quizQuestions.length - 1) {
+    currentIndex++;
+    renderQuestion();
+    saveState("quiz");
+  }
+}
+
+function prevQuestion() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    renderQuestion();
+    saveState("quiz");
+  }
+}
+
+function confirmFinish() {
+  const unanswered = userAnswers.filter(a => a === null).length;
+  if (unanswered > 0) {
+    const proceed = confirm(unanswered + ' question(s) are still unanswered. Finish the exam anyway?');
+    if (!proceed) return;
+  }
+  finishQuiz();
+}
+
+function finishQuiz() {
+  saveState("result");
+  let score = 0;
+  let incorrect = 0;
+  let unanswered = 0;
+
+  const reviewList = document.getElementById('review-list');
+  reviewList.innerHTML = '';
+
+  quizQuestions.forEach((q, i) => {
+    const userAns = userAnswers[i];
+    const isCorrect = q.multi
+      ? answersEqual(normalizeAnswer(q, userAns), normalizeAnswer(q, q.correct))
+      : userAns === q.correct;
+    if (userAns === null) unanswered++;
+    else if (isCorrect) score++;
+    else incorrect++;
+
+    const item = document.createElement('div');
+    item.className = 'review-item ' + (isCorrect ? 'correct' : 'incorrect');
+    const rq = document.createElement('div');
+    rq.className = 'rq';
+    rq.textContent = (i + 1) + '. ' + q.q;
+    item.appendChild(rq);
+
+    const yourAns = document.createElement('div');
+    yourAns.className = 'ra' + (isCorrect ? '' : ' your-wrong');
+    const yourText = q.multi && Array.isArray(userAns)
+      ? (userAns.length > 0 ? userAns.join(', ') : 'No answer')
+      : (userAns === null ? 'No answer' : userAns);
+    yourAns.textContent = 'Your answer: ' + yourText;
+    item.appendChild(yourAns);
+
+    if (!isCorrect) {
+      const correctAns = document.createElement('div');
+      correctAns.className = 'ra correct-answer';
+      const correctText = q.multi ? q.correct.join(', ') : q.correct;
+      correctAns.textContent = 'Correct answer: ' + correctText;
+      item.appendChild(correctAns);
+    }
+
+    if (q.exp) {
+      const exp = document.createElement('div');
+      exp.className = 'exp';
+      exp.textContent = q.exp;
+      item.appendChild(exp);
+    }
+
+    reviewList.appendChild(item);
+  });
+
+  const total = quizQuestions.length;
+  const pct = Math.round((score / total) * 100);
+  const passed = pct >= 70;
+
+  document.getElementById('score-big').textContent = score + ' / ' + total;
+  document.getElementById('score-big').className = 'score-big ' + (passed ? 'pass' : 'fail');
+  document.getElementById('pass-label').textContent = passed ? 'PASS' : 'DID NOT PASS';
+  document.getElementById('pass-label').className = passed ? 'pass' : 'fail';
+  document.getElementById('stat-correct').textContent = score;
+  document.getElementById('stat-incorrect').textContent = incorrect;
+  document.getElementById('stat-unanswered').textContent = unanswered;
+  document.getElementById('stat-pct').textContent = pct + '%';
+
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function toggleReview() {
+  const list = document.getElementById('review-list');
+  const btn = document.getElementById('review-toggle-btn');
+  const visible = list.style.display === 'block';
+  list.style.display = visible ? 'none' : 'block';
+  btn.textContent = visible ? 'Show Answer Review' : 'Hide Answer Review';
+}
+
+function resetReview() {
+  if (!confirm('Reset this review? Your saved progress and answers will be cleared.')) return;
+  clearState();
+  quizQuestions = [];
+  userAnswers = [];
+  currentIndex = 0;
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('start-screen').style.display = '';
+}
+
+(function boot() {
+  const saved = loadState();
+  if (!saved) return;
+  quizQuestions = saved.quizQuestions;
+  userAnswers = saved.userAnswers;
+  currentIndex = saved.currentIndex;
+  if (saved.phase === "result") {
+    finishQuiz();
+  } else {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('quiz-screen').style.display = 'block';
+    buildPalette();
+    renderQuestion();
+  }
+})();
+</script>
+<script src="../../../assets/footer.js" defer></script>
+</body>
+</html>
