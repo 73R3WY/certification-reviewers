@@ -54,7 +54,7 @@
     "  line-height: 1.2;",
     "  text-align: center;",
     "}",
-    ".site-footer__badge img { display: block; width: 45px; height: 45px; }",
+    ".site-footer__badge img { display: block; width: auto; height: 45px; max-width: 96px; object-fit: contain; }",
     ".site-footer__badge::after {",
     "  content: attr(data-tooltip);",
     "  position: absolute;",
