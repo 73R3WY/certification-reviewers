@@ -93,7 +93,9 @@
 
   var badgesHTML =
     badgeAnchor("48f3e4d3-000d-4166-9af4-68d585299ae8", "4d4693bb-530e-4bca-9327-de07f3aa2348/image.png", "AWS Certified AI Practitioner") +
-    badgeAnchor("2fde6be5-5a1d-42a8-ab03-ce141bab9d84", "00634f82-b07f-4bbd-a6bb-53de397fc3a6/image.png", "AWS Certified Cloud Practitioner");
+    badgeAnchor("2fde6be5-5a1d-42a8-ab03-ce141bab9d84", "00634f82-b07f-4bbd-a6bb-53de397fc3a6/image.png", "AWS Certified Cloud Practitioner") +
+    badgeAnchor("da9561a5-f938-4c1e-9a98-2e7089f21e9a", "ed8c832e-b100-4ab8-8864-2fddb2e87b04/linkedin_thumb_blob", "AWS Certified AI Business Strategist") +
+    badgeAnchor("7130ff95-2ab7-4d7d-a76c-5bba89ff90ef", "b7716dcd-7fd1-4cb2-bcc8-23685f1bcdd8/linkedin_thumb_blob", "AWS Certified AI Business Strategist Early Adopter");
 
   var footer = document.createElement("footer");
   footer.className = "site-footer";
